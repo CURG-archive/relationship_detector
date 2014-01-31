@@ -4,9 +4,7 @@
 #include "center_of_mass_detector.h"
 #include <iostream>
 
-//catkin_make relationship_detector-test
-//rosrun relationship_detector relationship_detector-test or catkin_make test
-
+//catkin_make run_tests
 
 
 TEST(ExampleTestCase, ExampleTestName) {
@@ -14,13 +12,9 @@ TEST(ExampleTestCase, ExampleTestName) {
 }
 
 
-TEST(CenterOfMassDetector, TestApple) {
-  char fileName[1024];
+TEST(CenterOfMassDetector, TestAppleCenterOfMass) {
 
-  sprintf(fileName,(ros::package::getPath("object_models") + "/models/rgbd-dataset/apple/apple_1/apple_1_1_100.pcd").c_str());
-  //want something like this:
-  //sprintf(fileName,"%s%s",ros::package::getPath("object_models"), "/models/rgbd-dataset/apple/apple_1/apple_1_1_100.pcd");
-
+  std::string fileName = ros::package::getPath("object_models") + "/models/rgbd-dataset/apple/apple_1/apple_1_1_100.pcd";
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 
@@ -40,6 +34,7 @@ TEST(CenterOfMassDetector, TestApple) {
   ASSERT_NEAR(centerOfMassProperty.centerOfMass.x, -0.0127071, absErrorBound);
   ASSERT_NEAR(centerOfMassProperty.centerOfMass.y, 0.699493, absErrorBound);
   ASSERT_NEAR(centerOfMassProperty.centerOfMass.z, -0.0152639, absErrorBound);
+
 }
 
 
