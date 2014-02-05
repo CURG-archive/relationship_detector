@@ -1,0 +1,4 @@
+<launch>
+  <node name="relationship_detector" pkg="relationship_detector" type="relationship_detector_node" /> 
+  <test test-name="test_relationship_detector" pkg="relationship_detector" type="test_relationship_detector_node" name="test" />
+</launch>

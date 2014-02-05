@@ -4,7 +4,7 @@ project(relationship_detector)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED roslib)
+find_package(catkin REQUIRED message_generation std_msgs sensor_msgs roscpp roslib)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -40,11 +40,11 @@ find_package(PCL REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+ add_message_files(
+   FILES
+   SegmentedObjectList.msg
+   RelatedObjectsList.msg
+ )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -61,10 +61,11 @@ find_package(PCL REQUIRED)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+ generate_messages(
+  DEPENDENCIES
+   std_msgs
+   sensor_msgs
+ )
 
 ###################################
 ## catkin specific configuration ##
@@ -78,7 +79,7 @@ find_package(PCL REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES relationship_detector
-#  CATKIN_DEPENDS other_catkin_pkg
+  CATKIN_DEPENDS message_runtime  roscpp
 #  DEPENDS system_lib
 )
 
@@ -109,6 +110,11 @@ add_definitions(${PCL_DEFINITIONS})
 ## Declare a cpp executable
 add_executable(relationship_detector_node src/relationship_detector_node.cpp)
 
+#this executable is for running integration tests that test that the relationship_detector_node works as a system
+#the integration tests are run using:
+#rostest relationship_detector relationship_detector.launch
+add_executable(test_relationship_detector_node test/test_relationship_detector_node.cpp)
+
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(relationship_detector_node relationship_detector_generate_messages_cpp)
@@ -120,6 +126,9 @@ add_executable(relationship_detector_node src/relationship_detector_node.cpp)
 
   target_link_libraries(relationship_detector_node
    	relationship_detector ${catkin_LIBRARIES} ${PCL_LIBRARIES}
+ )
+  target_link_libraries(test_relationship_detector_node
+        relationship_detector ${catkin_LIBRARIES} ${PCL_LIBRARIES} gtest
  )
 
 #############
@@ -161,8 +170,13 @@ add_executable(relationship_detector_node src/relationship_detector_node.cpp)
 ## Testing ##
 #############
 
+#this is for unit tests
+#unit tests are run using:
+#catkin_make run_tests
 ## Add gtest based cpp test target and link libraries
- catkin_add_gtest(${PROJECT_NAME}-test test/test_center_of_mass_detector.cpp)
+ catkin_add_gtest(${PROJECT_NAME}-test
+    test/property_detectors/test_center_of_mass_detector.cpp)
+
  if(TARGET ${PROJECT_NAME}-test)
    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${PCL_LIBRARIES})
  endif()
