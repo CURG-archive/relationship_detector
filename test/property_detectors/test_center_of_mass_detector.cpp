@@ -25,15 +25,15 @@ TEST(CenterOfMassDetector, TestAppleCenterOfMass) {
 
   CenterOfMassDetector centerOfMassDetector = CenterOfMassDetector();
 
-  centerOfMassDetector.setPointCloud(*cloud);
+  centerOfMassDetector.setPointCloud(cloud);
   centerOfMassDetector.calculatePropertyValue();
 
-  CenterOfMassProperty centerOfMassProperty = centerOfMassDetector.getCenterOfMassProperty();
+  boost::shared_ptr<CenterOfMassProperty> centerOfMassProperty = centerOfMassDetector.getCenterOfMassProperty();
 
   double absErrorBound = .0001;
-  ASSERT_NEAR(centerOfMassProperty.centerOfMass.x, -0.0127071, absErrorBound);
-  ASSERT_NEAR(centerOfMassProperty.centerOfMass.y, 0.699493, absErrorBound);
-  ASSERT_NEAR(centerOfMassProperty.centerOfMass.z, -0.0152639, absErrorBound);
+  ASSERT_NEAR(centerOfMassProperty->centerOfMassPoint.x, -0.0127071, absErrorBound);
+  ASSERT_NEAR(centerOfMassProperty->centerOfMassPoint.y, 0.699493, absErrorBound);
+  ASSERT_NEAR(centerOfMassProperty->centerOfMassPoint.z, -0.0152639, absErrorBound);
 
 }
 

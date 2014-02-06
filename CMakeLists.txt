@@ -4,7 +4,7 @@ project(relationship_detector)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED message_generation std_msgs sensor_msgs roscpp roslib)
+find_package(catkin REQUIRED message_generation std_msgs sensor_msgs geometry_msgs roscpp roslib)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -42,8 +42,9 @@ find_package(PCL REQUIRED)
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
+   SegmentedObject.msg
    SegmentedObjectList.msg
-   RelatedObjectsList.msg
+   ObjectCenterProperty.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -65,6 +66,7 @@ find_package(PCL REQUIRED)
   DEPENDENCIES
    std_msgs
    sensor_msgs
+   geometry_msgs
  )
 
 ###################################
@@ -95,6 +97,7 @@ include_directories(
 	include/relationship_detectors
 	include/properties
 	include/relationships
+  include/factories
 	${PCL_INCLUDE_DIRS}
 )
 
@@ -103,8 +106,8 @@ add_definitions(${PCL_DEFINITIONS})
 
 ## Declare a cpp library
  add_library(relationship_detector
-   src/property_detectors/property_detector.cpp
    src/property_detectors/center_of_mass_detector.cpp
+   src/factories/property_factory.cpp
  )
 
 ## Declare a cpp executable

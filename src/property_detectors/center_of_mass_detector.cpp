@@ -1,29 +1,27 @@
 #include "center_of_mass_detector.h"
 
-CenterOfMassDetector::~CenterOfMassDetector(){}
-
 void CenterOfMassDetector::calculatePropertyValue()
 {
     double x_total = 0;
     double y_total = 0;
     double z_total = 0;
 
-    for(int i ; i < objectCloud.size(); i++)
+    for(int i =0; i < objectCloudPtr->size() ; i++)
     {
-        x_total += objectCloud.points[i].x;
-        y_total += objectCloud.points[i].y;
-        z_total += objectCloud.points[i].z;
+        x_total += objectCloudPtr->points[i].x;
+        y_total += objectCloudPtr->points[i].y;
+        z_total += objectCloudPtr->points[i].z;
     }
 
-    pcl::PointXYZ center_of_mass_point = pcl::PointXYZ();
-    center_of_mass_point.x = x_total/objectCloud.size();
-    center_of_mass_point.y = y_total/objectCloud.size();
-    center_of_mass_point.z = z_total/objectCloud.size();
+    geometry_msgs::Point center_of_mass_point;
+    center_of_mass_point.x = x_total/objectCloudPtr->size();
+    center_of_mass_point.y = y_total/objectCloudPtr->size();
+    center_of_mass_point.z = z_total/objectCloudPtr->size();
 
-    centerOfMassProperty.centerOfMass = center_of_mass_point;
+    centerOfMassProperty = PropertyFactory::getInstance().buildCenterOfMassProperty(objectId, center_of_mass_point);
 }
 
-CenterOfMassProperty CenterOfMassDetector::getCenterOfMassProperty()
+boost::shared_ptr<CenterOfMassProperty> CenterOfMassDetector::getCenterOfMassProperty()
 {
 	return centerOfMassProperty;
 }

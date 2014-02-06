@@ -1,20 +1,19 @@
 #include "property_detector.h"
-#include "center_of_mass.h"
+#include "center_of_mass_property.h"
+#include "property_factory.h"
+#include <boost/shared_ptr.hpp>
 
 class CenterOfMassDetector: public PropertyDetector
 {
 	protected:
 
-		CenterOfMassProperty centerOfMassProperty;
+		boost::shared_ptr<CenterOfMassProperty> centerOfMassProperty;
 
 	public:
 
-		CenterOfMassDetector():PropertyDetector()
-			{
-				propertyName = "CenterOfMass";
-			};
-			
-		~CenterOfMassDetector();
-		void calculatePropertyValue();
-		CenterOfMassProperty getCenterOfMassProperty();
+		virtual void calculatePropertyValue();
+
+		boost::shared_ptr<CenterOfMassProperty> getCenterOfMassProperty();
+
+
 }; 

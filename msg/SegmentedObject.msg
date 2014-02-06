@@ -1,0 +1,3 @@
+Header header
+int32 segmentedObjectID
+sensor_msgs/PointCloud2 segmentedObjectPointCloud
