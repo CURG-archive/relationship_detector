@@ -1,7 +1,6 @@
 #include <ros/ros.h>
 #include "relationship_detector/SegmentedObject.h"
 #include "relationship_detector/SegmentedObjectList.h"
-#include "relationship_detector/RelatedObjectsList.h"
 #include "relationship_detector/ObjectCenterProperty.h"
 #include "std_msgs/String.h"
 #include "center_of_mass_detector.h"

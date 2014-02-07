@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(relationship_detector)
 
+##in qt run cmake with:
+## -DCATKIN_DEVEL_PREFIX=/home/jvarley/ros/perception_ws/devel
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -89,28 +92,45 @@ catkin_package(
 ## Build ##
 ###########
 
+SET(RELATIONSHIP_DETECTOR_LIBRARY_HEADERS
+    include/factories/property_factory.h
+    include/factories/relationship_factory.h
+    include/properties/center_of_mass_property.h
+    include/properties/pc_property.h
+    include/property_detectors/center_of_mass_detector.h
+    include/relationship_detectors/contact_points_detector.h
+    include/relationship_detectors/relationship_detector.h
+    include/relationships/contact_points_relationship.h
+    include/segmented_object/segmented_object.h
+    )
+
+SET(RELATIONSHIP_DETECTOR_LIBRARY_SOURCE
+    src/property_detectors/center_of_mass_detector.cpp
+    src/relationship_detectors/contact_points_detector.cpp
+    src/factories/property_factory.cpp
+    src/factories/relationship_factory.cpp
+    )
+
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-	include 
-	include/property_detectors
-	include/relationship_detectors
-	include/properties
-	include/relationships
-  include/factories
-  include/segmented_object
-	${PCL_INCLUDE_DIRS}
+    include
+    include/property_detectors
+    include/relationship_detectors
+    include/properties
+    include/relationships
+    include/factories
+    include/segmented_object
+    ${PCL_INCLUDE_DIRS}
 )
 
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
 ## Declare a cpp library
- add_library(relationship_detector
-   src/property_detectors/center_of_mass_detector.cpp
-   src/relationship_detectors/contact_points_detector.cpp
-   src/factories/property_factory.cpp
-   src/factories/relationship_factory.cpp
+add_library(relationship_detector
+    ${RELATIONSHIP_DETECTOR_LIBRARY_HEADERS}
+    ${RELATIONSHIP_DETECTOR_LIBRARY_SOURCE}
  )
 
 ## Declare a cpp executable
@@ -126,16 +146,17 @@ add_executable(test_relationship_detector_node test/test_relationship_detector_n
 # add_dependencies(relationship_detector_node relationship_detector_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(relationship_detector
+target_link_libraries(relationship_detector
    ${catkin_LIBRARIES} ${PCL_LIBRARIES}
- )
+)
 
-  target_link_libraries(relationship_detector_node
-   	relationship_detector ${catkin_LIBRARIES} ${PCL_LIBRARIES}
- )
-  target_link_libraries(test_relationship_detector_node
-        relationship_detector ${catkin_LIBRARIES} ${PCL_LIBRARIES} gtest
- )
+target_link_libraries(relationship_detector_node
+   relationship_detector ${catkin_LIBRARIES} ${PCL_LIBRARIES}
+)
+
+target_link_libraries(test_relationship_detector_node
+   relationship_detector ${catkin_LIBRARIES} ${PCL_LIBRARIES} gtest
+)
 
 #############
 ## Install ##
