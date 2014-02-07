@@ -4,6 +4,7 @@
 void ContactPointsDetector::calculateRelationshipValue()
 {
     std::vector<geometry_msgs::Point> contactPoints;
+    //pcl magic to determine contactPoints
     detectedRelationship = true;
     contactPointsRelationship = RelationshipFactory::getInstance().buildContactPointsRelationship(segmentedObject1, segmentedObject2, contactPoints);
 }

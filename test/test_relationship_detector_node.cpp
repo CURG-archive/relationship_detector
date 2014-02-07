@@ -1,7 +1,7 @@
 #include <ros/ros.h>
-#include "relationship_detector/ObjectCenterProperty.h"
-#include "relationship_detector/SegmentedObjectList.h"
-#include "relationship_detector/SegmentedObject.h"
+#include "perception_msgs/ObjectCenterProperty.h"
+#include "perception_msgs/SegmentedObjectList.h"
+#include "perception_msgs/SegmentedObject.h"
 #include "gtest/gtest.h"
 #include "std_msgs/String.h"
 #include <pcl/io/pcd_io.h>
@@ -23,10 +23,10 @@ namespace relationship_detector_node_test
             ros::Publisher segmentedObjectsPublisher;
 
             ros::Subscriber detectedPropertiesSubscriber;
-            void relatedObjectsMessageCallback(const relationship_detector::ObjectCenterProperty::ConstPtr &msg);
+            void relatedObjectsMessageCallback(const perception_msgs::ObjectCenterProperty::ConstPtr &msg);
 
             bool hasReceivedMessage;
-            relationship_detector::ObjectCenterProperty receivedMsg;
+            perception_msgs::ObjectCenterProperty receivedMsg;
     };
 
 
@@ -34,7 +34,7 @@ namespace relationship_detector_node_test
     {
         detectedPropertiesSubscriber = node_handle.subscribe("object_properties", 1000, &TestRelationshipDetectorNode::relatedObjectsMessageCallback, this);
 
-        segmentedObjectsPublisher = node_handle.advertise<relationship_detector::SegmentedObjectList>("segmented_objects",10);
+        segmentedObjectsPublisher = node_handle.advertise<perception_msgs::SegmentedObjectList>("segmented_objects",10);
 
         hasReceivedMessage = false;
 
@@ -42,7 +42,7 @@ namespace relationship_detector_node_test
     }
 
 
-    void TestRelationshipDetectorNode::relatedObjectsMessageCallback(const relationship_detector::ObjectCenterProperty::ConstPtr &msg)
+    void TestRelationshipDetectorNode::relatedObjectsMessageCallback(const perception_msgs::ObjectCenterProperty::ConstPtr &msg)
     {
         ROS_INFO("Received related object list message");
         hasReceivedMessage = true;
@@ -65,7 +65,7 @@ relationship_detector_node_test::TestRelationshipDetectorNode buildTestNode()
 }
 
 
-relationship_detector::SegmentedObjectList buildAppleSegmentedObjectsList()
+perception_msgs::SegmentedObjectList buildAppleSegmentedObjectsList()
 {
     //get point cloud
     std::string fileName = ros::package::getPath("object_models") + "/models/rgbd-dataset/apple/apple_1/apple_1_1_100.pcd";
@@ -80,12 +80,12 @@ relationship_detector::SegmentedObjectList buildAppleSegmentedObjectsList()
     pcl::toROSMsg(*cloud,sensorMessagePointCloud);
 
     //build segmented object and add point cloud to it
-    relationship_detector::SegmentedObject segmentedObject;
+    perception_msgs::SegmentedObject segmentedObject;
     segmentedObject.segmentedObjectID = 1;
     segmentedObject.segmentedObjectPointCloud = sensorMessagePointCloud;
 
     //build segmentedObjectList and add segmented object to it.
-    relationship_detector::SegmentedObjectList segmentedObjectsList;
+    perception_msgs::SegmentedObjectList segmentedObjectsList;
     segmentedObjectsList.segmentedObjects.push_back(segmentedObject);
     return segmentedObjectsList;
 }
@@ -94,7 +94,7 @@ relationship_detector::SegmentedObjectList buildAppleSegmentedObjectsList()
 TEST(RELATIONSHIP_DETECTOR_TEST_NODE, TestEmptySegmentedObjectsList) {
 
   relationship_detector_node_test::TestRelationshipDetectorNode node = buildTestNode();
-  relationship_detector::SegmentedObjectList segmentedObjectsList = buildAppleSegmentedObjectsList();
+  perception_msgs::SegmentedObjectList segmentedObjectsList = buildAppleSegmentedObjectsList();
 
   node.segmentedObjectsPublisher.publish(segmentedObjectsList);
 

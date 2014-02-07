@@ -43,12 +43,12 @@ find_package(PCL REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
- add_message_files(
-   FILES
-   SegmentedObject.msg
-   SegmentedObjectList.msg
-   ObjectCenterProperty.msg
- )
+# add_message_files(
+#   FILES
+#   SegmentedObject.msg
+#   SegmentedObjectList.msg
+#   ObjectCenterProperty.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -65,12 +65,12 @@ find_package(PCL REQUIRED)
 # )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages(
-  DEPENDENCIES
-   std_msgs
-   sensor_msgs
-   geometry_msgs
- )
+ #generate_messages(
+ # DEPENDENCIES
+ #  std_msgs
+ #  sensor_msgs
+ #  geometry_msgs
+ #)
 
 ###################################
 ## catkin specific configuration ##
@@ -84,7 +84,7 @@ find_package(PCL REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES relationship_detector
-  CATKIN_DEPENDS message_runtime  roscpp
+#  CATKIN_DEPENDS message_runtime  roscpp
 #  DEPENDS system_lib
 )
 

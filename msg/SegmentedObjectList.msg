@@ -1,3 +1,0 @@
-
-Header header
-SegmentedObject[] segmentedObjects

@@ -1,7 +1,7 @@
 #include <ros/ros.h>
-#include "relationship_detector/SegmentedObject.h"
-#include "relationship_detector/SegmentedObjectList.h"
-#include "relationship_detector/ObjectCenterProperty.h"
+#include "perception_msgs/SegmentedObject.h"
+#include "perception_msgs/SegmentedObjectList.h"
+#include "perception_msgs/ObjectCenterProperty.h"
 #include "std_msgs/String.h"
 #include "center_of_mass_detector.h"
 #include <sensor_msgs/PointCloud2.h>
@@ -19,7 +19,7 @@ namespace relationship_detector_node
             ros::NodeHandle node_handle;
 
             ros::Subscriber relationship_detector_sub;
-            void segmentedObjectListMessageCallback(const relationship_detector::SegmentedObjectList::ConstPtr &msg);
+            void segmentedObjectListMessageCallback(const perception_msgs::SegmentedObjectList::ConstPtr &msg);
 
             ros::Publisher detectedPropertyPublisher;
 
@@ -33,13 +33,13 @@ namespace relationship_detector_node
 
         relationship_detector_sub = node_handle.subscribe("segmented_objects", 1000, &RelationshipDetectorNode::segmentedObjectListMessageCallback, this);
 
-        detectedPropertyPublisher = node_handle.advertise<relationship_detector::ObjectCenterProperty>("object_properties",10);
+        detectedPropertyPublisher = node_handle.advertise<perception_msgs::ObjectCenterProperty>("object_properties",10);
 
         ROS_INFO("relationship_detection_node ready");
     }
 
 
-    void RelationshipDetectorNode::segmentedObjectListMessageCallback(const relationship_detector::SegmentedObjectList::ConstPtr &msg)
+    void RelationshipDetectorNode::segmentedObjectListMessageCallback(const perception_msgs::SegmentedObjectList::ConstPtr &msg)
     {
         ROS_INFO("Received segmented object list message");
 
@@ -50,7 +50,7 @@ namespace relationship_detector_node
         for(int i = 0; i< numSegmentedObjects; i++)
         {
             //get segmentedObject from message
-            relationship_detector::SegmentedObject segmentedObjectMsg = msg.get()->segmentedObjects[i];
+            perception_msgs::SegmentedObject segmentedObjectMsg = msg.get()->segmentedObjects[i];
             sensor_msgs::PointCloud2 sensorMessagePointCloud = segmentedObjectMsg.segmentedObjectPointCloud;
             pcl::PCLPointCloud2 segmentedObjectPCLPointCloud;
             pcl::PointCloud<pcl::PointXYZ>::Ptr segmentedObjectPCLPointCloudXYZ(new pcl::PointCloud<pcl::PointXYZ>());
@@ -65,7 +65,7 @@ namespace relationship_detector_node
             boost::shared_ptr<CenterOfMassProperty> centerOfMassProperty = centerOfMassDetector.getCenterOfMassProperty();
 
             //build property message from property
-            relationship_detector::ObjectCenterProperty objectCenterPropertyMessage;
+            perception_msgs::ObjectCenterProperty objectCenterPropertyMessage;
             objectCenterPropertyMessage.objectCenter = centerOfMassProperty->centerOfMassPoint;
             objectCenterPropertyMessage.segmentedObjectId = centerOfMassProperty->segmentedObjectId;
             objectCenterPropertyMessage.propertyId = centerOfMassProperty->propertyId;
