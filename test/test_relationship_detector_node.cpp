@@ -47,9 +47,6 @@ namespace relationship_detector_node_test
         ROS_INFO("Received related object list message");
         hasReceivedMessage = true;
         receivedMsg = *msg;
-
-
-
     }
 
 }

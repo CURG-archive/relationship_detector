@@ -1,27 +1,21 @@
 #include <string>
-#include <pcl/point_types.h>
-#include <pcl/io/pcd_io.h>
+#include "segmented_object.h"
 
 class PropertyDetector
 {
 	protected:
 
-    	pcl::PointCloud<pcl::PointXYZ>::Ptr objectCloudPtr;
-        int objectId;
+    	SegmentedObject *segmentedObject;
 
   	public:
 
         PropertyDetector(){};
         
-    	void setPointCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object_cloud_ptr)
+    	void setSegmentedObject(SegmentedObject *segmented_object)
         {
-           objectCloudPtr = object_cloud_ptr;
+           segmentedObject = segmented_object;
         };
 
-        void setObjectId(int object_id)
-        {
-            objectId = object_id;
-        }
 
     	virtual void calculatePropertyValue()=0;
 

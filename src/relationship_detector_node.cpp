@@ -10,6 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <pcl_ros/point_cloud.h>
 #include "property_factory.h"
+#include "segmented_object.h"
 
 namespace relationship_detector_node
 {
@@ -50,16 +51,17 @@ namespace relationship_detector_node
         for(int i = 0; i< numSegmentedObjects; i++)
         {
             //get segmentedObject from message
-            relationship_detector::SegmentedObject segmentedObject = msg.get()->segmentedObjects[i];
-            sensor_msgs::PointCloud2 sensorMessagePointCloud = segmentedObject.segmentedObjectPointCloud;
+            relationship_detector::SegmentedObject segmentedObjectMsg = msg.get()->segmentedObjects[i];
+            sensor_msgs::PointCloud2 sensorMessagePointCloud = segmentedObjectMsg.segmentedObjectPointCloud;
             pcl::PCLPointCloud2 segmentedObjectPCLPointCloud;
             pcl::PointCloud<pcl::PointXYZ>::Ptr segmentedObjectPCLPointCloudXYZ(new pcl::PointCloud<pcl::PointXYZ>());
             pcl_conversions::toPCL(sensorMessagePointCloud, segmentedObjectPCLPointCloud);
             pcl::fromPCLPointCloud2(segmentedObjectPCLPointCloud, *segmentedObjectPCLPointCloudXYZ);
+            SegmentedObject segmentedObject = SegmentedObject(segmentedObjectMsg.segmentedObjectID, segmentedObjectPCLPointCloudXYZ);
 
             //extract property from pointcloud
-            centerOfMassDetector.setPointCloud(segmentedObjectPCLPointCloudXYZ);
-            centerOfMassDetector.setObjectId(segmentedObject.segmentedObjectID);
+            centerOfMassDetector.setSegmentedObject(&segmentedObject);
+
             centerOfMassDetector.calculatePropertyValue();
             boost::shared_ptr<CenterOfMassProperty> centerOfMassProperty = centerOfMassDetector.getCenterOfMassProperty();
 

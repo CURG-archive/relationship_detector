@@ -16,16 +16,19 @@ TEST(CenterOfMassDetector, TestAppleCenterOfMass) {
 
   std::string fileName = ros::package::getPath("object_models") + "/models/rgbd-dataset/apple/apple_1/apple_1_1_100.pcd";
 
-  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_ptr (new pcl::PointCloud<pcl::PointXYZ>);
 
-  if (pcl::io::loadPCDFile<pcl::PointXYZ> (fileName, *cloud) == -1) //* load the file
+  if (pcl::io::loadPCDFile<pcl::PointXYZ> (fileName, *cloud_ptr) == -1) //* load the file
   {
     PCL_ERROR ("Couldn't read file \n");
   }
+ 
+  int unique_object_id = 1;
+  SegmentedObject segmentedObject = SegmentedObject(unique_object_id, cloud_ptr);
 
   CenterOfMassDetector centerOfMassDetector = CenterOfMassDetector();
 
-  centerOfMassDetector.setPointCloud(cloud);
+  centerOfMassDetector.setSegmentedObject(&segmentedObject);
   centerOfMassDetector.calculatePropertyValue();
 
   boost::shared_ptr<CenterOfMassProperty> centerOfMassProperty = centerOfMassDetector.getCenterOfMassProperty();
@@ -41,7 +44,4 @@ TEST(CenterOfMassDetector, TestAppleCenterOfMass) {
 
 
 
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
+

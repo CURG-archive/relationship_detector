@@ -6,19 +6,19 @@ void CenterOfMassDetector::calculatePropertyValue()
     double y_total = 0;
     double z_total = 0;
 
-    for(int i =0; i < objectCloudPtr->size() ; i++)
+    for(int i =0; i < segmentedObject->pointCloudPtr->size() ; i++)
     {
-        x_total += objectCloudPtr->points[i].x;
-        y_total += objectCloudPtr->points[i].y;
-        z_total += objectCloudPtr->points[i].z;
+        x_total += segmentedObject->pointCloudPtr->points[i].x;
+        y_total += segmentedObject->pointCloudPtr->points[i].y;
+        z_total += segmentedObject->pointCloudPtr->points[i].z;
     }
 
     geometry_msgs::Point center_of_mass_point;
-    center_of_mass_point.x = x_total/objectCloudPtr->size();
-    center_of_mass_point.y = y_total/objectCloudPtr->size();
-    center_of_mass_point.z = z_total/objectCloudPtr->size();
+    center_of_mass_point.x = x_total/segmentedObject->pointCloudPtr->size();
+    center_of_mass_point.y = y_total/segmentedObject->pointCloudPtr->size();
+    center_of_mass_point.z = z_total/segmentedObject->pointCloudPtr->size();
 
-    centerOfMassProperty = PropertyFactory::getInstance().buildCenterOfMassProperty(objectId, center_of_mass_point);
+    centerOfMassProperty = PropertyFactory::getInstance().buildCenterOfMassProperty(segmentedObject->uniqueId, center_of_mass_point);
 }
 
 boost::shared_ptr<CenterOfMassProperty> CenterOfMassDetector::getCenterOfMassProperty()

@@ -98,6 +98,7 @@ include_directories(
 	include/properties
 	include/relationships
   include/factories
+  include/segmented_object
 	${PCL_INCLUDE_DIRS}
 )
 
@@ -107,7 +108,9 @@ add_definitions(${PCL_DEFINITIONS})
 ## Declare a cpp library
  add_library(relationship_detector
    src/property_detectors/center_of_mass_detector.cpp
+   src/relationship_detectors/contact_points_detector.cpp
    src/factories/property_factory.cpp
+   src/factories/relationship_factory.cpp
  )
 
 ## Declare a cpp executable
@@ -178,7 +181,10 @@ add_executable(test_relationship_detector_node test/test_relationship_detector_n
 #catkin_make run_tests
 ## Add gtest based cpp test target and link libraries
  catkin_add_gtest(${PROJECT_NAME}-test
-    test/property_detectors/test_center_of_mass_detector.cpp)
+    test/unit_test_runner.cpp
+    test/property_detectors/test_center_of_mass_detector.cpp
+    test/relationship_detectors/test_contact_points_detector.cpp
+    )
 
  if(TARGET ${PROJECT_NAME}-test)
    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${PCL_LIBRARIES})
