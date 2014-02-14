@@ -14,7 +14,7 @@ TEST(ExampleTestCase, ExampleTestName) {
 
 TEST(CenterOfMassDetector, TestAppleCenterOfMass) {
 
-  std::string fileName = ros::package::getPath("object_models") + "/models/rgbd-dataset/apple/apple_1/apple_1_1_100.pcd";
+  std::string fileName = ros::package::getPath("object_models") + "/models/rgbd-dataset/apple_1/apple_1_1_100.pcd";
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_ptr (new pcl::PointCloud<pcl::PointXYZ>);
 
