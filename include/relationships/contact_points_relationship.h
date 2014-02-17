@@ -4,6 +4,8 @@
 #include "relationship.h"
 #include <geometry_msgs/Point.h>
 #include <vector>
+#include <pcl/kdtree/kdtree.h>
+#include <pcl/kdtree/kdtree_flann.h>
 
 
 

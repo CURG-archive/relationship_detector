@@ -25,19 +25,31 @@ SegmentedObject buildSegmentedObject(std::string filename)
 
 }
 
-TEST(ContactPointsDetector, TestAppleContactPoints) {
+TEST(ContactPointsDetector, TestTwoObjectsTouching) {
 
-  std::string fileName = ros::package::getPath("object_models") + "/models/rgbd-dataset/apple/apple_1/apple_1_1_100.pcd";
-  SegmentedObject segmentedObject1 = buildSegmentedObject(fileName);
-  SegmentedObject segmentedObject2 = buildSegmentedObject(fileName);
+  std::string fileName1 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_1_1_1.pcd";
+  std::string fileName2 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_1_1_1.pcd";
+  SegmentedObject segmentedObject1 = buildSegmentedObject(fileName1);
+  SegmentedObject segmentedObject2 = buildSegmentedObject(fileName2);
 
   ContactPointsDetector contactPointsDetector = ContactPointsDetector();
   contactPointsDetector.setSegmentedObjects(&segmentedObject1,&segmentedObject2);
   contactPointsDetector.calculateRelationshipValue();
 
-  if(contactPointsDetector.detectedRelationship)
-  {
-    boost::shared_ptr<ContactPointsRelationship> contactPointsRelationship = contactPointsDetector.getContactPointsRelationship();
-  }
+  EXPECT_EQ(contactPointsDetector.detectedRelationship, true);
   
+}
+
+TEST(ContactPointsDetector, TestTwoObjectsNotTouching) {
+
+  std::string fileName1 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_1_1_1.pcd";
+  std::string fileName2 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_trans_xyz.pcd";
+  SegmentedObject segmentedObject1 = buildSegmentedObject(fileName1);
+  SegmentedObject segmentedObject2 = buildSegmentedObject(fileName2);
+
+  ContactPointsDetector contactPointsDetector = ContactPointsDetector();
+  contactPointsDetector.setSegmentedObjects(&segmentedObject1,&segmentedObject2);
+  contactPointsDetector.calculateRelationshipValue();
+
+  EXPECT_EQ(contactPointsDetector.detectedRelationship, false);
 }
