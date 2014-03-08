@@ -7,7 +7,7 @@ project(relationship_detector)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED message_generation std_msgs sensor_msgs geometry_msgs roscpp roslib)
+find_package(catkin REQUIRED message_generation std_msgs sensor_msgs geometry_msgs roscpp roslib perception_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -84,7 +84,7 @@ find_package(PCL REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES relationship_detector
-#  CATKIN_DEPENDS message_runtime  roscpp
+#  CATKIN_DEPENDS message_runtime  roscpp perception_msgs
 #  DEPENDS system_lib
 )
 
@@ -139,6 +139,7 @@ add_executable(test_relationship_detector_node test/test_relationship_detector_n
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(relationship_detector_node relationship_detector_generate_messages_cpp)
+add_dependencies(relationship_detector perception_msgs_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(relationship_detector
