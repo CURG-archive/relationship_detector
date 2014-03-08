@@ -1,5 +1,4 @@
 #include "contact_points_detector.h"
-#include "relationship_factory.h"
 
 void ContactPointsDetector::calculateRelationshipValue()
 {
@@ -11,7 +10,7 @@ void ContactPointsDetector::calculateRelationshipValue()
 
     //create a point which will iterate over segmented object 2
     pcl::PointXYZ searchPoint;
-    float radius = 0.02;
+    float radius = 0.005;
     int max_nn = 1;
 
 	std::vector<int> pointIdxRadiusSearch;
@@ -24,22 +23,22 @@ void ContactPointsDetector::calculateRelationshipValue()
         searchPoint.z = segmentedObject2->pointCloudPtr->points[i].z;
 
         if(kdtree.radiusSearch(searchPoint, radius, pointIdxRadiusSearch, pointRadiusSquaredDistance,max_nn) > 0)
-    	{
+        {
             for (size_t i = 0; i < pointIdxRadiusSearch.size (); ++i)
-			{
+            {
                 std::cout << "    "  << segmentedObject1->pointCloudPtr->points[ pointIdxRadiusSearch[i] ].x
                           << " " << segmentedObject1->pointCloudPtr->points[ pointIdxRadiusSearch[i] ].y
                           << " " << segmentedObject1->pointCloudPtr->points[ pointIdxRadiusSearch[i] ].z
                           << " (squared distance: " << pointRadiusSquaredDistance[i] << ")" << std::endl;
-			}
+            }
             //contactPoints.push_back(searchPoint);
-			detectedRelationship = true;				
-    	}       
+            detectedRelationship = true;
+        }
     }
     if(detectedRelationship)
     {
-        std::cout << " Relationship Detected"<< std::endl;
-		contactPointsRelationship = RelationshipFactory::getInstance().buildContactPointsRelationship(segmentedObject1, segmentedObject2, contactPoints);
+        std::cout << "Relationship Detected";
+		//contactPointsRelationship = RelationshipFactory::getInstance().buildContactPointsRelationship(segmentedObject1, segmentedObject2, contactPoints);
     }
 }
 

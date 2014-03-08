@@ -93,6 +93,8 @@ catkin_package(
 ###########
 
 SET(RELATIONSHIP_DETECTOR_LIBRARY_HEADERS
+    include/factories/property_factory.h
+    include/factories/relationship_factory.h
     include/properties/center_of_mass_property.h
     include/properties/pc_property.h
     include/property_detectors/center_of_mass_detector.h
@@ -105,6 +107,8 @@ SET(RELATIONSHIP_DETECTOR_LIBRARY_HEADERS
 SET(RELATIONSHIP_DETECTOR_LIBRARY_SOURCE
     src/property_detectors/center_of_mass_detector.cpp
     src/relationship_detectors/contact_points_detector.cpp
+    src/factories/property_factory.cpp
+    src/factories/relationship_factory.cpp
     )
 
 ## Specify additional locations of header files
@@ -115,6 +119,7 @@ include_directories(
     include/relationship_detectors
     include/properties
     include/relationships
+    include/factories
     include/segmented_object
     ${PCL_INCLUDE_DIRS}
 )

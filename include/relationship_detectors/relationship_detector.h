@@ -8,9 +8,7 @@ class RelationshipDetector
         SegmentedObject *segmentedObject1;
         SegmentedObject *segmentedObject2;
 
-
-
-  	public:
+  public:
 
         RelationshipDetector()
         {
@@ -30,5 +28,6 @@ class RelationshipDetector
 
     	virtual void calculateRelationshipValue()=0;
 
+typedef boost::shared_ptr<RelationshipDetector> RelationshipPtr;
 
 };

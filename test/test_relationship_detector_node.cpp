@@ -68,7 +68,7 @@ relationship_detector_node_test::TestRelationshipDetectorNode buildTestNode()
 perception_msgs::SegmentedObjectList buildAppleSegmentedObjectsList()
 {
     //get point cloud
-    std::string fileName = ros::package::getPath("object_models") + "/models/rgbd-dataset/apple/apple_1/apple_1_1_100.pcd";
+    std::string fileName = ros::package::getPath("object_models") + "/models/rgbd-dataset/apple_1/apple_1_1_100.pcd";
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 

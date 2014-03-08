@@ -3,21 +3,25 @@
 
 class PCProperty
 {
-  	public:
-  		//unique id for this property
-  		int propertyId;
 
-  		//unique id for the object which has this property
-    	int segmentedObjectId;
+  protected:
+    static int property_id_generator;
 
-      PCProperty(int property_id, int segmented_object_id)
-      {
-      	propertyId = property_id;
-      	segmentedObjectId = segmented_object_id;
-      };
+  public:
+    int uniquePropertyType;
 
-      virtual ~PCProperty(){};
-    
+    int uniquePropertyId;
+
+    int segmentedObjectId;
+
+    int getNextPropertyId()
+    {
+      PCProperty::property_id_generator +=1;
+      return property_id_generator;
+    }
+    virtual ~PCProperty(){};
+
 };
 
+    int PCProperty::property_id_generator = 0;
 #endif

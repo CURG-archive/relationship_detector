@@ -1,6 +1,6 @@
 #include "center_of_mass_detector.h"
 
-void CenterOfMassDetector::calculatePropertyValue()
+void CenterOfMassDetector::computeProperty()
 {
     double x_total = 0;
     double y_total = 0;
@@ -18,10 +18,6 @@ void CenterOfMassDetector::calculatePropertyValue()
     center_of_mass_point.y = y_total/segmentedObject->pointCloudPtr->size();
     center_of_mass_point.z = z_total/segmentedObject->pointCloudPtr->size();
 
-    centerOfMassProperty = PropertyFactory::getInstance().buildCenterOfMassProperty(segmentedObject->uniqueId, center_of_mass_point);
-}
-
-boost::shared_ptr<CenterOfMassProperty> CenterOfMassDetector::getCenterOfMassProperty()
-{
-	return centerOfMassProperty;
+    PCProperty *p = new CenterOfMassProperty(center_of_mass_point);
+    computedProperty = boost::shared_ptr<PCProperty>(p);
 }

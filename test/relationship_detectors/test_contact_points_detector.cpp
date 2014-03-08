@@ -28,7 +28,7 @@ SegmentedObject buildSegmentedObject(std::string filename)
 TEST(ContactPointsDetector, TestTwoObjectsTouching) {
 
   std::string fileName1 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_1_1_1.pcd";
-  std::string fileName2 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_1_1_1.pcd";
+  std::string fileName2 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_trans_x_touch.pcd";
   SegmentedObject segmentedObject1 = buildSegmentedObject(fileName1);
   SegmentedObject segmentedObject2 = buildSegmentedObject(fileName2);
 
@@ -43,7 +43,7 @@ TEST(ContactPointsDetector, TestTwoObjectsTouching) {
 TEST(ContactPointsDetector, TestTwoObjectsNotTouching) {
 
   std::string fileName1 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_1_1_1.pcd";
-  std::string fileName2 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_trans_xyz.pcd";
+  std::string fileName2 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_trans_x_not_touching.pcd";
   SegmentedObject segmentedObject1 = buildSegmentedObject(fileName1);
   SegmentedObject segmentedObject2 = buildSegmentedObject(fileName2);
 
