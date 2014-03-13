@@ -4,8 +4,7 @@
 #include "contact_points_detector.h"
 #include <iostream>
 
-//catkin_make run_tests
-
+//script to run tests : catkin_make run_tests
 
 int nextSegmentedObjectId = 0;
 
@@ -34,7 +33,7 @@ TEST(ContactPointsDetector, TestTwoObjectsTouching) {
 
   ContactPointsDetector contactPointsDetector = ContactPointsDetector();
   contactPointsDetector.setSegmentedObjects(&segmentedObject1,&segmentedObject2);
-  contactPointsDetector.calculateRelationshipValue();
+  contactPointsDetector.computeRelationship();
 
   EXPECT_EQ(contactPointsDetector.detectedRelationship, true);
   
@@ -49,7 +48,7 @@ TEST(ContactPointsDetector, TestTwoObjectsNotTouching) {
 
   ContactPointsDetector contactPointsDetector = ContactPointsDetector();
   contactPointsDetector.setSegmentedObjects(&segmentedObject1,&segmentedObject2);
-  contactPointsDetector.calculateRelationshipValue();
+  contactPointsDetector.computeRelationship();
 
   EXPECT_EQ(contactPointsDetector.detectedRelationship, false);
 }

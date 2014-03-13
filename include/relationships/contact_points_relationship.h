@@ -12,14 +12,14 @@
 class ContactPointsRelationship: public Relationship
 {
 	public:
-		std::vector<geometry_msgs::Point> contactPoints;
+		std::vector<pcl::PointXYZ> contactPoints;
 
-		ContactPointsRelationship(int relationship_id, SegmentedObject *segmented_object_1, SegmentedObject *segmented_object_2, std::vector<geometry_msgs::Point> contact_points)
-			:Relationship(relationship_id, segmented_object_1,segmented_object_2 )
+		ContactPointsRelationship(std::vector<pcl::PointXYZ> contact_points)
 		{
+			uniqueRelationshipType = 1;
+			uniqueRelationshipId = getNextRelationshipId();
 			contactPoints = contact_points;
-		};	
-
+		};
 }; 
 
 #endif

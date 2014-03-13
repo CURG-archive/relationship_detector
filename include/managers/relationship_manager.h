@@ -3,40 +3,53 @@
 
 #include <ros/package.h>
 #include <unordered_map>
+#include <map>
 
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/functional/factory.hpp>
 
+#include "relationshipEnum.h"
 #include "relationship.h"
 #include "segmented_object.h"
 #include "contact_points_detector.h"
 #include "relationship_detector.h"
 
+using namespace std;
+// namespace boost {
+//         // Add in a simple wrapper for a factor creating shared pointers
+//                 template<typename T>
+//         struct shared_factory : public factory<shared_ptr<T> >
+//         { };
+// }
+
 class RelationshipManager
 {
+protected:
+  typedef boost::function<RelationshipDetectorPtr ()> RelationshipDetectorFactory;
+  typedef map<int, RelationshipDetectorFactory> RelationshipDetectorFactoryMap;
+  typedef int RelationshipType;
 
+  static const int NUM_RELATIONSHIPS = 1;
   //map of already detected relationships
   //key: hash(object_id and relationship_type)
   //value: relationship (true or false)
-  unordered_map<int, Relationship> relationshipMap;
+  unordered_map<int, boost::shared_ptr<Relationship>> relationshipMap;
+  RelationshipDetectorFactoryMap relationshipDetectorFactoryMap;
 
-  typedef boost::function<RelationshipPtr (SegmentedObject &segmentedObject1, SegmentedObject &segmentedObject2)> RelationshipDetectorFactory;
-  typedef map<int, RelationshipDetectorFactory> RelationshipDetectorFactoryMap;
-  typedef int RelationshipType;
-  RelationshipDetectorMap RelationshipDetectorFactoryMap;
-
+public:
   //constructor 
   RelationshipManager()
   {
+    relationshipMap.reserve(7000);    
     //register the relationships to their detectors
-    relationshipDetectorMap[ContactPointsRelationship.relationship_id] = boost::shared_factory<ContactPointsDetector>();
-    // relationshipDetectorMap[OnTopRelationship.relationship_id] = boost::shared_factory<OnTopDetector>();
+    relationshipDetectorFactoryMap[RelationshipClassIds::CONTACT_POINTS] = boost::shared_factory<ContactPointsDetector>();
+    // relationshipDetectorFactoryMap[RelationshipClassIds::ON_TOP] = boost::shared_factory<OnTopDetector>();
   }
 
 
-  Relationship * getRelationship(SegmentedObject * segmentedObject1, SegmentedObject * segmentedObject2, PropertyType relationship_type)
+  boost::shared_ptr<Relationship> getRelationship(SegmentedObject *segmentedObject1, SegmentedObject *segmentedObject2, RelationshipType relationship_type)
   {
     int relationship_hash = pow(2,segmentedObject1->uniqueId)*pow(3,segmentedObject2->uniqueId)*pow(5,relationship_type);
     if(relationshipMap.find(relationship_hash) != relationshipMap.end())
@@ -44,20 +57,21 @@ class RelationshipManager
       return relationshipMap[relationship_hash];
     }
 
-    detector = relationshipDetectorMap[relationship_type]();
-    detector.setSegmentedObject(segmentedObject);
-    detector.computeRelationship();
-    relationshipMap[relationship_hash] = computedRelationship;
-    return relationship;
+    boost::shared_ptr<RelationshipDetector> detector = relationshipDetectorFactoryMap[relationship_type]();
+    detector->setSegmentedObjects(segmentedObject1,segmentedObject2);
+    detector->computeRelationship();
+    relationshipMap[relationship_hash] = detector->getRelationship();
+    return detector->getRelationship();
   }
 
-  std::vector<Relationship> getAllRelationships(SegmentedObject *segmentedObject1, SegmentedObject *segmentedObject2)
+  std::vector<boost::shared_ptr<Relationship>> getAllRelationships(SegmentedObject *segmentedObject1, SegmentedObject *segmentedObject2)
   {
-    std::vector<Relationship> allRelationships;
+    std::vector<boost::shared_ptr<Relationship>> allRelationships;
     
-    allRelationships.push_back(this->getRelationship(segmentedObject1,segmentedObject2,1));
-    // allRelationships.push_back(this->getRelationship(segmentedObject1,segmentedObject2, 2));
-    // allRelationships.push_back(this->getRelationship(segmentedObject1,segmentedObject2, 3));
+    for (int i=0; i<NUM_RELATIONSHIPS; i++)
+    {
+      allRelationships.push_back(this->getRelationship(segmentedObject1,segmentedObject2,i));
+    }
     return allRelationships;
   }
 

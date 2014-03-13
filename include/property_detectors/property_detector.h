@@ -1,3 +1,6 @@
+#ifndef PROPERTY_DETECTOR_H
+#define PROPERTY_DETECTOR_H
+
 #include <string>
 #include "pc_property.h"
 #include "segmented_object.h"
@@ -26,4 +29,5 @@ class PropertyDetector
 	virtual void computeProperty() = 0;
 };
 
-typedef boost::shared_ptr<PropertyDetector> PropertyPtr;
+typedef boost::shared_ptr<PropertyDetector> PropertyDetectorPtr;
+#endif

@@ -29,8 +29,3 @@ void OnTopDetector::calculateRelationshipValue()
     }
 
 }
-
-boost::shared_ptr<OnTopRelationship> OnTopDetector::getOnTopRelationship()
-{
-	return onTopRelationship;
-}

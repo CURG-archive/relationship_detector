@@ -3,6 +3,9 @@
 #include "gtest/gtest.h"
 #include "center_of_mass_detector.h"
 #include <iostream>
+#include <boost/shared_ptr.hpp>
+#include <memory>
+#include <boost/pointer_cast.hpp>
 
 //catkin_make run_tests
 
@@ -29,14 +32,16 @@ TEST(CenterOfMassDetector, TestAppleCenterOfMass) {
   CenterOfMassDetector centerOfMassDetector = CenterOfMassDetector();
 
   centerOfMassDetector.setSegmentedObject(&segmentedObject);
-  centerOfMassDetector.calculatePropertyValue();
+  centerOfMassDetector.computeProperty();
 
-  boost::shared_ptr<CenterOfMassProperty> centerOfMassProperty = centerOfMassDetector.getCenterOfMassProperty();
+  boost::shared_ptr<PCProperty> centerOfMassProperty = centerOfMassDetector.getProperty();
+  boost::shared_ptr<CenterOfMassProperty> com;
+  com = boost::dynamic_pointer_cast<CenterOfMassProperty>(centerOfMassProperty);
 
   double absErrorBound = .0001;
-  ASSERT_NEAR(centerOfMassProperty->centerOfMassPoint.x, -0.0127071, absErrorBound);
-  ASSERT_NEAR(centerOfMassProperty->centerOfMassPoint.y, 0.699493, absErrorBound);
-  ASSERT_NEAR(centerOfMassProperty->centerOfMassPoint.z, -0.0152639, absErrorBound);
+  ASSERT_NEAR(com->centerOfMassPoint.x, -0.0127071, absErrorBound);
+  ASSERT_NEAR(com->centerOfMassPoint.y, 0.699493, absErrorBound);
+  ASSERT_NEAR(com->centerOfMassPoint.z, -0.0152639, absErrorBound);
 
 }
 

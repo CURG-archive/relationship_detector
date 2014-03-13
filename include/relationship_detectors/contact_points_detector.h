@@ -1,18 +1,15 @@
+#ifndef CONTACT_POINTS_DETECTOR_H
+#define CONTACT_POINTS_DETECTOR_H
+
 #include "relationship_detector.h"
 #include "contact_points_relationship.h"
 #include <boost/shared_ptr.hpp>
 
 class ContactPointsDetector: public RelationshipDetector
 {
-	protected:
-
-		boost::shared_ptr<ContactPointsRelationship> contactPointsRelationship;
-
 	public:
 		
-		virtual void calculateRelationshipValue();
-
-		boost::shared_ptr<ContactPointsRelationship> getContactPointsRelationship();
-
-
+		virtual void computeRelationship();
 }; 
+
+#endif

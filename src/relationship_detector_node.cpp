@@ -8,7 +8,10 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include <boost/shared_ptr.hpp>
 #include <pcl_ros/point_cloud.h>
+#include "property_manager.h"
+#include "relationship_manager.h"
 #include "segmented_object.h"
+#include "pc_property.h"
 
 namespace relationship_detector_node
 {
@@ -42,8 +45,8 @@ namespace relationship_detector_node
     {
         ROS_INFO("Received segmented object list message");
 
-        PropertyManager *pm= new PropertyManager()
-        RelationshipManager *rm = new RelationshipManager();
+        PropertyManager pm;
+        RelationshipManager rm;
         int numSegmentedObjects = msg.get()->segmentedObjects.size();
 
         for(int i = 0; i< numSegmentedObjects; i++)
@@ -56,12 +59,12 @@ namespace relationship_detector_node
             pcl_conversions::toPCL(sensorMessagePointCloud, segmentedObjectPCLPointCloud);
             pcl::fromPCLPointCloud2(segmentedObjectPCLPointCloud, *segmentedObjectPCLPointCloudXYZ);
             SegmentedObject segmentedObject = SegmentedObject(segmentedObjectMsg.segmentedObjectID, segmentedObjectPCLPointCloudXYZ);
-            pm.getAllProperties(segmentedObject);
+            std::vector<boost::shared_ptr<PCProperty>> objProperties = pm.getAllProperties(&segmentedObject);
         }
 
         for(int i = 0; i< numSegmentedObjects; i+=2)
         {
-            //get segmentedObject from message
+            //get segmentedObject1 from message
             perception_msgs::SegmentedObject segmentedObjectMsg1 = msg.get()->segmentedObjects[i];
             sensor_msgs::PointCloud2 sensorMessagePointCloud1 = segmentedObjectMsg1.segmentedObjectPointCloud;
             pcl::PCLPointCloud2 segmentedObjectPCLPointCloud1;
@@ -70,6 +73,7 @@ namespace relationship_detector_node
             pcl::fromPCLPointCloud2(segmentedObjectPCLPointCloud1, *segmentedObjectPCLPointCloudXYZ1);
             SegmentedObject segmentedObject1 = SegmentedObject(segmentedObjectMsg1.segmentedObjectID, segmentedObjectPCLPointCloudXYZ1);
 
+            //get segmentedObject2 from message
             perception_msgs::SegmentedObject segmentedObjectMsg2 = msg.get()->segmentedObjects[i+1];
             sensor_msgs::PointCloud2 sensorMessagePointCloud2 = segmentedObjectMsg2.segmentedObjectPointCloud;
             pcl::PCLPointCloud2 segmentedObjectPCLPointCloud2;
@@ -78,57 +82,10 @@ namespace relationship_detector_node
             pcl::fromPCLPointCloud2(segmentedObjectPCLPointCloud2, *segmentedObjectPCLPointCloudXYZ2);
             SegmentedObject segmentedObject2 = SegmentedObject(segmentedObjectMsg2.segmentedObjectID, segmentedObjectPCLPointCloudXYZ2);
 
-            rm.getAllRelationships(segmentedObject1,segmentedObject2);
+            std::vector<boost::shared_ptr<Relationship>> objRelationships = rm.getAllRelationships(&segmentedObject1,&segmentedObject2);
         }
     }
-
-/*
-        for(each segmentedObject )
-            pm.detectAllProperties(segmenteObject)
-
-        for (segObject1)
-            for (segObject2)
-                rm.detectAllRelationships(segObject1,segObject2);
-
-        for all properties in pm.propertiesMap.values:
-            publish property
-        for all relationships in rm.relationshipsMap.values:
-            publish relationship
-*/
-
-//____________________________________________________________________
-//Old Code Please Delete
-        // int numSegmentedObjects = msg.get()->segmentedObjects.size();
-
-        // for(int i = 0; i< numSegmentedObjects; i++)
-        // {
-        //     //get segmentedObject from message
-        //     perception_msgs::SegmentedObject segmentedObjectMsg = msg.get()->segmentedObjects[i];
-        //     sensor_msgs::PointCloud2 sensorMessagePointCloud = segmentedObjectMsg.segmentedObjectPointCloud;
-        //     pcl::PCLPointCloud2 segmentedObjectPCLPointCloud;
-        //     pcl::PointCloud<pcl::PointXYZ>::Ptr segmentedObjectPCLPointCloudXYZ(new pcl::PointCloud<pcl::PointXYZ>());
-        //     pcl_conversions::toPCL(sensorMessagePointCloud, segmentedObjectPCLPointCloud);
-        //     pcl::fromPCLPointCloud2(segmentedObjectPCLPointCloud, *segmentedObjectPCLPointCloudXYZ);
-        //     SegmentedObject segmentedObject = SegmentedObject(segmentedObjectMsg.segmentedObjectID, segmentedObjectPCLPointCloudXYZ);
-
-        //     //extract property from pointcloud
-        //     centerOfMassDetector.setSegmentedObject(&segmentedObject);
-
-        //     centerOfMassDetector.computeProperty();
-        //     boost::shared_ptr<PCProperty> centerOfMassProperty = centerOfMassDetector.getProperty();
-
-        //     //build property message from property
-        //     // perception_msgs::ObjectCenterProperty objectCenterPropertyMessage;
-        //     // objectCenterPropertyMessage.objectCenter = centerOfMassProperty->centerOfMassPoint;
-        //     // objectCenterPropertyMessage.segmentedObjectId = centerOfMassProperty->segmentedObjectId;
-        //     // objectCenterPropertyMessage.propertyId = centerOfMassProperty->uniquePropertyId;
-
-        //     //send message
-        //     // detectedPropertyPublisher.publish(objectCenterPropertyMessage);
-        // }
-    //}
-//}
-
+}
 
 
 int main(int argc, char **argv) 

@@ -91,14 +91,19 @@ catkin_package(
 ###########
 ## Build ##
 ###########
+SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x" )
 
 SET(RELATIONSHIP_DETECTOR_LIBRARY_HEADERS
+    include/managers/property_manager.h
+    include/managers/relationship_manager.h
     include/properties/center_of_mass_property.h
     include/properties/pc_property.h
+    include/properties/propertyEnum.h    
     include/property_detectors/center_of_mass_detector.h
     include/relationship_detectors/contact_points_detector.h
     include/relationship_detectors/relationship_detector.h
     include/relationships/contact_points_relationship.h
+    include/relationships/relationshipEnum.h     
     include/segmented_object/segmented_object.h
     )
 
@@ -111,6 +116,7 @@ SET(RELATIONSHIP_DETECTOR_LIBRARY_SOURCE
 ## Your package locations should be listed before other locations
 include_directories(
     include
+    include/managers
     include/property_detectors
     include/relationship_detectors
     include/properties
