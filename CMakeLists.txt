@@ -100,16 +100,24 @@ SET(RELATIONSHIP_DETECTOR_LIBRARY_HEADERS
     include/properties/pc_property.h
     include/properties/propertyEnum.h    
     include/property_detectors/center_of_mass_detector.h
+    include/property_detectors/property_detector.h
     include/relationship_detectors/contact_points_detector.h
+    include/relationship_detectors/on_top_detector.h
     include/relationship_detectors/relationship_detector.h
     include/relationships/contact_points_relationship.h
-    include/relationships/relationshipEnum.h     
+    include/relationships/on_top_relationship.h
+    include/relationships/relationship.h
+    include/relationships/relationshipEnum.h
     include/segmented_object/segmented_object.h
     )
 
 SET(RELATIONSHIP_DETECTOR_LIBRARY_SOURCE
     src/property_detectors/center_of_mass_detector.cpp
     src/relationship_detectors/contact_points_detector.cpp
+    src/relationship_detectors/on_top_detector.cpp
+    src/relationship_detectors/relationship_detector.cpp
+    src/relationships/relationship.cpp
+    src/properties/properties.cpp
     )
 
 ## Specify additional locations of header files
@@ -207,6 +215,7 @@ target_link_libraries(test_relationship_detector_node
     test/unit_test_runner.cpp
     test/property_detectors/test_center_of_mass_detector.cpp
     test/relationship_detectors/test_contact_points_detector.cpp
+    test/relationship_detectors/test_on_top_detector.cpp
     )
 
  if(TARGET ${PROJECT_NAME}-test)

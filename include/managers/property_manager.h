@@ -50,7 +50,6 @@ public:
     // propertyDetectorFactoryMap[PropertyClassIds::ORIENTATION] = boost::shared_factory<OrientationPropertyDetector>();
   }
 
-
   boost::shared_ptr<PCProperty> getProperty(SegmentedObject *segmentedObject, PropertyType property_type)
   {
     int property_hash = pow(2,segmentedObject->uniqueId)*pow(3,property_type);

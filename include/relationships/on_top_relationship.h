@@ -10,12 +10,15 @@ class OnTopRelationship: public Relationship
 {
 	public:
 		bool isOnTop;
+		int onTopObjectId;
 
-		OnTopRelationship(int relationship_id, SegmentedObject *segmented_object_1, SegmentedObject *segmented_object_2, bool is_on_top)
-			:Relationship(relationship_id, segmented_object_1,segmented_object_2 )
+		OnTopRelationship(bool is_on_top, int on_top_object_id)
 		{
+			uniqueRelationshipType = 2;
+			uniqueRelationshipId = getNextRelationshipId();
 			isOnTop = is_on_top;
-		};	
+			onTopObjectId = on_top_object_id;
+		};
 
 }; 
 

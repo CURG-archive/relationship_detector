@@ -3,6 +3,7 @@
 
 #include "relationship_detector.h"
 #include "contact_points_relationship.h"
+
 #include <boost/shared_ptr.hpp>
 
 class ContactPointsDetector: public RelationshipDetector

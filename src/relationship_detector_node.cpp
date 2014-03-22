@@ -93,7 +93,6 @@ int main(int argc, char **argv)
 
   ros::init(argc, argv, "relationship_detector_node");
   ros::NodeHandle nh;
-
   relationship_detector_node::RelationshipDetectorNode node;
 
   ros::spin();

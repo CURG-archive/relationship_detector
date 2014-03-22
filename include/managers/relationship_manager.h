@@ -13,8 +13,10 @@
 #include "relationshipEnum.h"
 #include "relationship.h"
 #include "segmented_object.h"
+#include "on_top_detector.h"
 #include "contact_points_detector.h"
 #include "relationship_detector.h"
+#include "property_manager.h"
 
 using namespace std;
 // namespace boost {

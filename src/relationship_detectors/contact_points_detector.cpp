@@ -41,6 +41,6 @@ void ContactPointsDetector::computeRelationship()
         std::cout << "Relationship Detected\n";
     }
 
-    Relationship *r = new ContactPointsRelationship(contactPoints);
-    computedRelationship = boost::shared_ptr<Relationship>(r);
+    Relationship *cp = new ContactPointsRelationship(contactPoints);
+    computedRelationship = boost::shared_ptr<Relationship>(cp);
 }

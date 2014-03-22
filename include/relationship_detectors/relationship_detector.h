@@ -32,7 +32,6 @@ class RelationshipDetector
         virtual void computeRelationship()=0;
 };
 
-bool RelationshipDetector::detectedRelationship = false;
 typedef boost::shared_ptr<RelationshipDetector> RelationshipDetectorPtr;
 
 #endif
