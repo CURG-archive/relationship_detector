@@ -118,7 +118,7 @@ SET(RELATIONSHIP_DETECTOR_LIBRARY_SOURCE
     src/property_detectors/center_of_mass_detector.cpp
     src/relationship_detectors/contact_points_detector.cpp
     src/relationship_detectors/on_top_detector.cpp
-    src/relationship_detectors/left_right_adjacency_detector.cpp
+    src/relationship_detectors/relationship_detector.cpp
     src/relationships/relationship.cpp
     src/properties/properties.cpp
     src/build_segmented_objects.cpp

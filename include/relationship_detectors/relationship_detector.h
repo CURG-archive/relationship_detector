@@ -13,10 +13,10 @@ class RelationshipDetector
         SegmentedObject *segmentedObject1;
         SegmentedObject *segmentedObject2;
       //the property computed from the segmented Object
-        boost::shared_ptr<Relationship> computedRelationship;        
+        boost::shared_ptr<Relationship> computedRelationship;      
 
   public:
-      static bool detectedRelationship;
+      bool detectedRelationship;
 
     	void setSegmentedObjects( SegmentedObject *segmented_object_1, SegmentedObject *segmented_object_2)
         {

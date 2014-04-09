@@ -1,15 +1,15 @@
-#include "on_top_detector.h"
+#include "left_right_adjacency_detector.h"
 #include "relationship_manager.h"
 #include "contact_points_detector.h"
 #include "relationship_manager.h"
 
-void OnTopDetector::computeRelationship()
+void LeftRightAdjacencyDetector::computeRelationship()
 {
     int obj1_id = segmentedObject1->uniqueId;
     int obj2_id = segmentedObject2->uniqueId;
 
-    bool isOnTop = false;
-    int onTopObjectId;
+    bool isLeftRightAdjacent = false;
+    int leftObjectId, rightObjectId;
 
     RelationshipManager rm;
     PropertyManager pm;
@@ -29,25 +29,27 @@ void OnTopDetector::computeRelationship()
         boost::shared_ptr<CenterOfMassProperty> com2;
         com2 = boost::dynamic_pointer_cast<CenterOfMassProperty>(centerOfMassPropertyObject2);
 
-        if(com1->centerOfMassPoint.z > com2->centerOfMassPoint.z)
+        if(com1->centerOfMassPoint.x < com2->centerOfMassPoint.x)
         {
-            isOnTop = true;
+            isLeftRightAdjacent = true;
+            leftObjectId = obj1_id;
+            rightObjectId = obj2_id;
             detectedRelationship = true;
-            onTopObjectId = obj1_id;
-            std::cout << "Object 1 is on top of Object 2"<<std::endl;
+            std::cout << "Object 1 is left adjacent to Object 2"<<std::endl;
         }
         else
         {
-            isOnTop = true;
+            isLeftRightAdjacent = true;
+            leftObjectId = obj2_id;
+            rightObjectId = obj1_id;
             detectedRelationship = true;
-            onTopObjectId = obj2_id;
-            std::cout << "Object 2 is on top of Object 1"<<std::endl;
+            std::cout << "Object 2 is right adjacent to Object 1"<<std::endl;
         }      
     }
     else{
         detectedRelationship = false;
-        std::cout << "Objects are not in contact. On top relationship is not defined"<<std::endl;
+        std::cout << "Objects are not in contact. Adjacency relationship is not defined"<<std::endl;
     }
-        Relationship *onTop = new OnTopRelationship(isOnTop, onTopObjectId);
-        computedRelationship = boost::shared_ptr<Relationship>(onTop);
+        Relationship *leftRightAdjacency = new LeftRightAdjacencyRelationship(isLeftRightAdjacent, leftObjectId, rightObjectId);
+        computedRelationship = boost::shared_ptr<Relationship>(leftRightAdjacency);
 }

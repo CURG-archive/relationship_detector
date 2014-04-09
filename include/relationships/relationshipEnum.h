@@ -1,0 +1,6 @@
+#ifndef RELATIONSHIPENUM_H
+#define RELATIONSHIPENUM_H
+
+enum RelationshipClassIds{ CONTACT_POINTS = 1, ON_TOP, LEFT_RIGHT_ADJACENCY};
+
+#endif
