@@ -3,21 +3,21 @@
 
 #include <string>
 #include "pc_property.h"
-#include "segmented_object.h"
+#include "recognized_object.h"
 
 class PropertyDetector
 {
-	//this input segmentedObject
+	//this input recognizedObject
 	protected: 
-		SegmentedObject *segmentedObject;
+		RecognizedObject *recognizedObject;
 
-	//the property computed from the segmented Object
+	//the property computed from the recognized Object
 		boost::shared_ptr<PCProperty> computedProperty;
 
 	public:
-	void setSegmentedObject(SegmentedObject *_segmentedObject)
+	void setRecognizedObject(RecognizedObject *_recognizedObject)
 	{
-		segmentedObject = _segmentedObject;
+		recognizedObject = _recognizedObject;
 	}
 
 	boost::shared_ptr<PCProperty> getProperty()

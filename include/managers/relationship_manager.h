@@ -12,7 +12,7 @@
 
 #include "relationshipEnum.h"
 #include "relationship.h"
-#include "segmented_object.h"
+#include "recognized_object.h"
 #include "on_top_detector.h"
 #include "contact_points_detector.h"
 #include "relationship_detector.h"
@@ -51,28 +51,28 @@ public:
   }
 
 
-  boost::shared_ptr<Relationship> getRelationship(SegmentedObject *segmentedObject1, SegmentedObject *segmentedObject2, RelationshipType relationship_type)
+  boost::shared_ptr<Relationship> getRelationship(RecognizedObject *recognizedObject1, RecognizedObject *recognizedObject2, RelationshipType relationship_type)
   {
-    int relationship_hash = pow(2,segmentedObject1->uniqueId)*pow(3,segmentedObject2->uniqueId)*pow(5,relationship_type);
+    int relationship_hash = pow(2,recognizedObject1->uniqueId)*pow(3,recognizedObject2->uniqueId)*pow(5,relationship_type);
     if(relationshipMap.find(relationship_hash) != relationshipMap.end())
     {
       return relationshipMap[relationship_hash];
     }
 
     boost::shared_ptr<RelationshipDetector> detector = relationshipDetectorFactoryMap[relationship_type]();
-    detector->setSegmentedObjects(segmentedObject1,segmentedObject2);
+    detector->setRecognizedObjects(recognizedObject1,recognizedObject2);
     detector->computeRelationship();
     relationshipMap[relationship_hash] = detector->getRelationship();
     return detector->getRelationship();
   }
 
-  std::vector<boost::shared_ptr<Relationship>> getAllRelationships(SegmentedObject *segmentedObject1, SegmentedObject *segmentedObject2)
+  std::vector<boost::shared_ptr<Relationship>> getAllRelationships(RecognizedObject *recognizedObject1, RecognizedObject *recognizedObject2)
   {
     std::vector<boost::shared_ptr<Relationship>> allRelationships;
     
     for (int i=0; i<NUM_RELATIONSHIPS; i++)
     {
-      allRelationships.push_back(this->getRelationship(segmentedObject1,segmentedObject2,i));
+      allRelationships.push_back(this->getRelationship(recognizedObject1,recognizedObject2,i));
     }
     return allRelationships;
   }

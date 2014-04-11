@@ -45,8 +45,8 @@ find_package(PCL REQUIRED)
 ## Generate messages in the 'msg' folder
 # add_message_files(
 #   FILES
-#   SegmentedObject.msg
-#   SegmentedObjectList.msg
+#   RecognizedObject.msg
+#   RecognizedObjectList.msg
 #   ObjectCenterProperty.msg
 # )
 
@@ -110,8 +110,8 @@ SET(RELATIONSHIP_DETECTOR_LIBRARY_HEADERS
     include/relationships/on_top_relationship.h
     include/relationships/relationship.h
     include/relationships/relationshipEnum.h
-    include/segmented_object/segmented_object.h
-    include/segmented_object/build_segmented_objects.h
+    include/recognized_object/recognized_object.h
+    include/recognized_object/build_recognized_objects.h
     )
 
 SET(RELATIONSHIP_DETECTOR_LIBRARY_SOURCE
@@ -121,7 +121,7 @@ SET(RELATIONSHIP_DETECTOR_LIBRARY_SOURCE
     src/relationship_detectors/left_right_adjacency_detector.cpp
     src/relationships/relationship.cpp
     src/properties/properties.cpp
-    src/build_segmented_objects.cpp
+    src/build_recognized_objects.cpp
     )
 
 ## Specify additional locations of header files
@@ -133,7 +133,7 @@ include_directories(
     include/relationship_detectors
     include/properties
     include/relationships
-    include/segmented_object
+    include/recognized_object
     ${PCL_INCLUDE_DIRS}
 )
 

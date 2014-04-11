@@ -1,7 +1,7 @@
 #ifndef RELATIONSHIP_H
 #define RELATIONSHIP_H
 
-#include "segmented_object.h"
+#include "recognized_object.h"
 
 class Relationship
 {
@@ -15,8 +15,8 @@ class Relationship
 
       int uniqueRelationshipId;
 
-      int segmentedObjectId1;
-      int segmentedObjectId2;
+      int recognizedObjectId1;
+      int recognizedObjectId2;
 
       int getNextRelationshipId();
 

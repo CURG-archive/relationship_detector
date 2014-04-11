@@ -2,7 +2,7 @@
 #define RELATIONSHIP_DETECTOR_H
 
 #include <string>
-#include "segmented_object.h"
+#include "recognized_object.h"
 #include "relationship.h"
 
 
@@ -10,18 +10,18 @@ class RelationshipDetector
 {
 	protected:
 
-        SegmentedObject *segmentedObject1;
-        SegmentedObject *segmentedObject2;
-      //the property computed from the segmented Object
+        RecognizedObject *recognizedObject1;
+        RecognizedObject *recognizedObject2;
+      //the property computed from the recognized Object
         boost::shared_ptr<Relationship> computedRelationship;      
 
   public:
       bool detectedRelationship;
 
-    	void setSegmentedObjects( SegmentedObject *segmented_object_1, SegmentedObject *segmented_object_2)
+    	void setRecognizedObjects( RecognizedObject *recognized_object_1, RecognizedObject *recognized_object_2)
         {
-           segmentedObject1 = segmented_object_1;
-           segmentedObject2 = segmented_object_2;
+           recognizedObject1 = recognized_object_1;
+           recognizedObject2 = recognized_object_2;
         };
 
         boost::shared_ptr<Relationship> getRelationship()

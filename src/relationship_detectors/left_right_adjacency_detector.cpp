@@ -5,8 +5,8 @@
 
 void LeftRightAdjacencyDetector::computeRelationship()
 {
-    int obj1_id = segmentedObject1->uniqueId;
-    int obj2_id = segmentedObject2->uniqueId;
+    int obj1_id = recognizedObject1->uniqueId;
+    int obj2_id = recognizedObject2->uniqueId;
 
     bool isLeftRightAdjacent = false;
     int leftObjectId, rightObjectId;
@@ -14,18 +14,18 @@ void LeftRightAdjacencyDetector::computeRelationship()
     RelationshipManager rm;
     PropertyManager pm;
     // check to see proper type casting from pointers to references
-    boost::shared_ptr<Relationship> isTouching = rm.getRelationship(segmentedObject1, segmentedObject2, CONTACT_POINTS);
+    boost::shared_ptr<Relationship> isTouching = rm.getRelationship(recognizedObject1, recognizedObject2, CONTACT_POINTS);
     boost::shared_ptr<ContactPointsRelationship> cp;
     cp = boost::dynamic_pointer_cast<ContactPointsRelationship>(isTouching);
 
     if(cp->contactPoints.size() > 0)
     {
 
-        boost::shared_ptr<PCProperty> centerOfMassPropertyObject1 = pm.getProperty(segmentedObject1, CENTER_OF_MASS);
+        boost::shared_ptr<PCProperty> centerOfMassPropertyObject1 = pm.getProperty(recognizedObject1, CENTER_OF_MASS);
         boost::shared_ptr<CenterOfMassProperty> com1;
         com1 = boost::dynamic_pointer_cast<CenterOfMassProperty>(centerOfMassPropertyObject1);
 
-        boost::shared_ptr<PCProperty> centerOfMassPropertyObject2 = pm.getProperty(segmentedObject2, CENTER_OF_MASS);
+        boost::shared_ptr<PCProperty> centerOfMassPropertyObject2 = pm.getProperty(recognizedObject2, CENTER_OF_MASS);
         boost::shared_ptr<CenterOfMassProperty> com2;
         com2 = boost::dynamic_pointer_cast<CenterOfMassProperty>(centerOfMassPropertyObject2);
 

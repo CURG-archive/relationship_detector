@@ -10,7 +10,7 @@ class PCProperty
 
     int uniquePropertyId;
 
-    int segmentedObjectId;
+    int recognizedObjectId;
 
     int getNextPropertyId();
 

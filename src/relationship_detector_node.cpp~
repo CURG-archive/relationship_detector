@@ -1,6 +1,6 @@
 #include <ros/ros.h>
-#include "relationship_detector/SegmentedObject.h"
-#include "relationship_detector/SegmentedObjectList.h"
+#include "relationship_detector/RecognizedObject.h"
+#include "relationship_detector/RecognizedObjectList.h"
 #include "relationship_detector/RelatedObjectsList.h"
 #include "relationship_detector/ObjectCenterProperty.h"
 #include "std_msgs/String.h"
@@ -10,7 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <pcl_ros/point_cloud.h>
 #include "property_factory.h"
-#include "segmented_object.h"
+#include "recognized_object.h"
 
 namespace relationship_detector_node
 {
@@ -20,7 +20,7 @@ namespace relationship_detector_node
             ros::NodeHandle node_handle;
 
             ros::Subscriber relationship_detector_sub;
-            void segmentedObjectListMessageCallback(const relationship_detector::SegmentedObjectList::ConstPtr &msg);
+            void recognizedObjectListMessageCallback(const relationship_detector::RecognizedObjectList::ConstPtr &msg);
 
             ros::Publisher detectedPropertyPublisher;
 
@@ -32,7 +32,7 @@ namespace relationship_detector_node
     RelationshipDetectorNode::RelationshipDetectorNode(): node_handle("")
     {
 
-        relationship_detector_sub = node_handle.subscribe("segmented_objects", 1000, &RelationshipDetectorNode::segmentedObjectListMessageCallback, this);
+        relationship_detector_sub = node_handle.subscribe("recognized_objects", 1000, &RelationshipDetectorNode::recognizedObjectListMessageCallback, this);
 
         detectedPropertyPublisher = node_handle.advertise<relationship_detector::ObjectCenterProperty>("object_properties",10);
 
@@ -40,27 +40,27 @@ namespace relationship_detector_node
     }
 
 
-    void RelationshipDetectorNode::segmentedObjectListMessageCallback(const relationship_detector::SegmentedObjectList::ConstPtr &msg)
+    void RelationshipDetectorNode::recognizedObjectListMessageCallback(const relationship_detector::RecognizedObjectList::ConstPtr &msg)
     {
-        ROS_INFO("Received segmented object list message");
+        ROS_INFO("Received recognized object list message");
 
         CenterOfMassDetector centerOfMassDetector;
 
-        int numSegmentedObjects = msg.get()->segmentedObjects.size();
+        int numRecognizedObjects = msg.get()->recognizedObjects.size();
 
-        for(int i = 0; i< numSegmentedObjects; i++)
+        for(int i = 0; i< numRecognizedObjects; i++)
         {
-            //get segmentedObject from message
-            relationship_detector::SegmentedObject segmentedObjectMsg = msg.get()->segmentedObjects[i];
-            sensor_msgs::PointCloud2 sensorMessagePointCloud = segmentedObjectMsg.segmentedObjectPointCloud;
-            pcl::PCLPointCloud2 segmentedObjectPCLPointCloud;
-            pcl::PointCloud<pcl::PointXYZ>::Ptr segmentedObjectPCLPointCloudXYZ(new pcl::PointCloud<pcl::PointXYZ>());
-            pcl_conversions::toPCL(sensorMessagePointCloud, segmentedObjectPCLPointCloud);
-            pcl::fromPCLPointCloud2(segmentedObjectPCLPointCloud, *segmentedObjectPCLPointCloudXYZ);
-            SegmentedObject segmentedObject = SegmentedObject(segmentedObjectMsg.segmentedObjectID, segmentedObjectPCLPointCloudXYZ);
+            //get recognizedObject from message
+            relationship_detector::RecognizedObject recognizedObjectMsg = msg.get()->recognizedObjects[i];
+            sensor_msgs::PointCloud2 sensorMessagePointCloud = recognizedObjectMsg.recognizedObjectPointCloud;
+            pcl::PCLPointCloud2 recognizedObjectPCLPointCloud;
+            pcl::PointCloud<pcl::PointXYZ>::Ptr recognizedObjectPCLPointCloudXYZ(new pcl::PointCloud<pcl::PointXYZ>());
+            pcl_conversions::toPCL(sensorMessagePointCloud, recognizedObjectPCLPointCloud);
+            pcl::fromPCLPointCloud2(recognizedObjectPCLPointCloud, *recognizedObjectPCLPointCloudXYZ);
+            RecognizedObject recognizedObject = RecognizedObject(recognizedObjectMsg.recognizedObjectID, recognizedObjectPCLPointCloudXYZ);
 
             //extract property from pointcloud
-            centerOfMassDetector.setSegmentedObject(&segmentedObject);
+            centerOfMassDetector.setRecognizedObject(&recognizedObject);
 
             centerOfMassDetector.calculatePropertyValue();
             boost::shared_ptr<CenterOfMassProperty> centerOfMassProperty = centerOfMassDetector.getCenterOfMassProperty();
@@ -68,7 +68,7 @@ namespace relationship_detector_node
             //build property message from property
             relationship_detector::ObjectCenterProperty objectCenterPropertyMessage;
             objectCenterPropertyMessage.objectCenter = centerOfMassProperty->centerOfMassPoint;
-            objectCenterPropertyMessage.segmentedObjectId = centerOfMassProperty->segmentedObjectId;
+            objectCenterPropertyMessage.recognizedObjectId = centerOfMassProperty->recognizedObjectId;
             objectCenterPropertyMessage.propertyId = centerOfMassProperty->propertyId;
 
             //send message

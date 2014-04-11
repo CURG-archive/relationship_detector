@@ -11,7 +11,7 @@
 #include <boost/functional/factory.hpp>
 
 #include "propertyEnum.h"
-#include "segmented_object.h"
+#include "recognized_object.h"
 #include "center_of_mass_property.h"
 #include "center_of_mass_detector.h"
 #include "pc_property.h"
@@ -50,28 +50,28 @@ public:
     // propertyDetectorFactoryMap[PropertyClassIds::ORIENTATION] = boost::shared_factory<OrientationPropertyDetector>();
   }
 
-  boost::shared_ptr<PCProperty> getProperty(SegmentedObject *segmentedObject, PropertyType property_type)
+  boost::shared_ptr<PCProperty> getProperty(RecognizedObject *recognizedObject, PropertyType property_type)
   {
-    int property_hash = pow(2,segmentedObject->uniqueId)*pow(3,property_type);
+    int property_hash = pow(2,recognizedObject->uniqueId)*pow(3,property_type);
     if(propertyMap.find(property_hash) != propertyMap.end())
     {
       return propertyMap[property_hash];
     }
 
     boost::shared_ptr<PropertyDetector> detector = propertyDetectorFactoryMap[property_type]();
-    detector->setSegmentedObject(segmentedObject);
+    detector->setRecognizedObject(recognizedObject);
     detector->computeProperty();
     propertyMap[property_hash] = detector->getProperty();
     return detector->getProperty();
   }
 
-  std::vector<boost::shared_ptr<PCProperty>> getAllProperties(SegmentedObject *segmentedObject)
+  std::vector<boost::shared_ptr<PCProperty>> getAllProperties(RecognizedObject *recognizedObject)
   {
     std::vector<boost::shared_ptr<PCProperty>> allProperties;
     
     for (int i=0; i<NUM_PROPERTIES; i++)
     {
-      allProperties.push_back(this->getProperty(segmentedObject, i));
+      allProperties.push_back(this->getProperty(recognizedObject, i));
     }
     return allProperties;
   }

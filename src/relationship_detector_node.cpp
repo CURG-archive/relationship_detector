@@ -1,6 +1,6 @@
 #include <ros/ros.h>
-#include "perception_msgs/SegmentedObject.h"
-#include "perception_msgs/SegmentedObjectList.h"
+#include "perception_msgs/RecognizedObject.h"
+#include "perception_msgs/RecognizedObjectList.h"
 #include "perception_msgs/ObjectCenterProperty.h"
 #include "std_msgs/String.h"
 #include "center_of_mass_detector.h"
@@ -10,7 +10,7 @@
 #include <pcl_ros/point_cloud.h>
 #include "property_manager.h"
 #include "relationship_manager.h"
-#include "segmented_object.h"
+#include "recognized_object.h"
 #include "pc_property.h"
 
 namespace relationship_detector_node
@@ -19,11 +19,10 @@ namespace relationship_detector_node
     {
         private:
             ros::NodeHandle node_handle;
-
-            ros::Subscriber relationship_detector_sub;
-            void segmentedObjectListMessageCallback(const perception_msgs::SegmentedObjectList::ConstPtr &msg);
-
             ros::Publisher detectedPropertyPublisher;
+            ros::Subscriber relationship_detector_sub;
+
+            void recognizedObjectListMessageCallback(const perception_msgs::RecognizedObjectList::ConstPtr &msg);
 
         public:
             RelationshipDetectorNode();
@@ -32,59 +31,101 @@ namespace relationship_detector_node
 
     RelationshipDetectorNode::RelationshipDetectorNode(): node_handle("")
     {
-
-        relationship_detector_sub = node_handle.subscribe("segmented_objects", 1000, &RelationshipDetectorNode::segmentedObjectListMessageCallback, this);
-
+        relationship_detector_sub = node_handle.subscribe("recognizedObjectList", 1000, &RelationshipDetectorNode::recognizedObjectListMessageCallback, this);
+        ROS_INFO("recognized objects ready");
         detectedPropertyPublisher = node_handle.advertise<perception_msgs::ObjectCenterProperty>("object_properties",10);
-
         ROS_INFO("relationship_detection_node ready");
     }
 
-
-    void RelationshipDetectorNode::segmentedObjectListMessageCallback(const perception_msgs::SegmentedObjectList::ConstPtr &msg)
+    void RelationshipDetectorNode::recognizedObjectListMessageCallback(const perception_msgs::RecognizedObjectList::ConstPtr &msg)
     {
-        ROS_INFO("Received segmented object list message");
+        ROS_INFO("Received recognized object list message");
 
         PropertyManager pm;
         RelationshipManager rm;
-        int numSegmentedObjects = msg.get()->segmentedObjects.size();
+        int numRecognizedObjects = msg.get()->recognizedObjects.size();
 
-        for(int i = 0; i< numSegmentedObjects; i++)
+        for(int i = 0; i< numRecognizedObjects; i++)
         {
-            //get segmentedObject from message
-            perception_msgs::SegmentedObject segmentedObjectMsg = msg.get()->segmentedObjects[i];
-            sensor_msgs::PointCloud2 sensorMessagePointCloud = segmentedObjectMsg.segmentedObjectPointCloud;
-            pcl::PCLPointCloud2 segmentedObjectPCLPointCloud;
-            pcl::PointCloud<pcl::PointXYZ>::Ptr segmentedObjectPCLPointCloudXYZ(new pcl::PointCloud<pcl::PointXYZ>());
-            pcl_conversions::toPCL(sensorMessagePointCloud, segmentedObjectPCLPointCloud);
-            pcl::fromPCLPointCloud2(segmentedObjectPCLPointCloud, *segmentedObjectPCLPointCloudXYZ);
-            SegmentedObject segmentedObject = SegmentedObject(segmentedObjectMsg.segmentedObjectID, segmentedObjectPCLPointCloudXYZ);
-            std::vector<boost::shared_ptr<PCProperty>> objProperties = pm.getAllProperties(&segmentedObject);
+            //get recognizedObject from message
+            perception_msgs::RecognizedObject recognizedObjectMsg = msg.get()->recognizedObjects[i];
+            sensor_msgs::PointCloud2 sensorMessagePointCloud = recognizedObjectMsg.recognizedObjectPointCloud;
+            pcl::PCLPointCloud2 recognizedObjectPCLPointCloud;
+            pcl::PointCloud<pcl::PointXYZ>::Ptr recognizedObjectPCLPointCloudXYZ(new pcl::PointCloud<pcl::PointXYZ>());
+            pcl_conversions::toPCL(sensorMessagePointCloud, recognizedObjectPCLPointCloud);
+            pcl::fromPCLPointCloud2(recognizedObjectPCLPointCloud, *recognizedObjectPCLPointCloudXYZ);
+            RecognizedObject recognizedObject = RecognizedObject(recognizedObjectMsg.recognizedObjectID, recognizedObjectPCLPointCloudXYZ);
+            std::vector<boost::shared_ptr<PCProperty>> objProperties = pm.getAllProperties(&recognizedObject);
         }
 
-        for(int i = 0; i< numSegmentedObjects; i+=2)
+        for(int i = 0; i< numRecognizedObjects; i+=2)
         {
-            //get segmentedObject1 from message
-            perception_msgs::SegmentedObject segmentedObjectMsg1 = msg.get()->segmentedObjects[i];
-            sensor_msgs::PointCloud2 sensorMessagePointCloud1 = segmentedObjectMsg1.segmentedObjectPointCloud;
-            pcl::PCLPointCloud2 segmentedObjectPCLPointCloud1;
-            pcl::PointCloud<pcl::PointXYZ>::Ptr segmentedObjectPCLPointCloudXYZ1(new pcl::PointCloud<pcl::PointXYZ>());
-            pcl_conversions::toPCL(sensorMessagePointCloud1, segmentedObjectPCLPointCloud1);
-            pcl::fromPCLPointCloud2(segmentedObjectPCLPointCloud1, *segmentedObjectPCLPointCloudXYZ1);
-            SegmentedObject segmentedObject1 = SegmentedObject(segmentedObjectMsg1.segmentedObjectID, segmentedObjectPCLPointCloudXYZ1);
+            //get recognizedObject1 from message
+            perception_msgs::RecognizedObject recognizededObjectMsg1 = msg.get()->recognizedObjects[i];
+            sensor_msgs::PointCloud2 sensorMessagePointCloud1 = recognizededObjectMsg1.recognizedObjectPointCloud;
+            pcl::PCLPointCloud2 recognizedObjectPCLPointCloud1;
+            pcl::PointCloud<pcl::PointXYZ>::Ptr recognizedObjectPCLPointCloudXYZ1(new pcl::PointCloud<pcl::PointXYZ>());
+            pcl_conversions::toPCL(sensorMessagePointCloud1, recognizedObjectPCLPointCloud1);
+            pcl::fromPCLPointCloud2(recognizedObjectPCLPointCloud1, *recognizedObjectPCLPointCloudXYZ1);
+            RecognizedObject recognizedObject1 = RecognizedObject(recognizededObjectMsg1.recognizedObjectID, recognizedObjectPCLPointCloudXYZ1);
 
-            //get segmentedObject2 from message
-            perception_msgs::SegmentedObject segmentedObjectMsg2 = msg.get()->segmentedObjects[i+1];
-            sensor_msgs::PointCloud2 sensorMessagePointCloud2 = segmentedObjectMsg2.segmentedObjectPointCloud;
-            pcl::PCLPointCloud2 segmentedObjectPCLPointCloud2;
-            pcl::PointCloud<pcl::PointXYZ>::Ptr segmentedObjectPCLPointCloudXYZ2(new pcl::PointCloud<pcl::PointXYZ>());
-            pcl_conversions::toPCL(sensorMessagePointCloud2, segmentedObjectPCLPointCloud2);
-            pcl::fromPCLPointCloud2(segmentedObjectPCLPointCloud2, *segmentedObjectPCLPointCloudXYZ2);
-            SegmentedObject segmentedObject2 = SegmentedObject(segmentedObjectMsg2.segmentedObjectID, segmentedObjectPCLPointCloudXYZ2);
+            //get recognizedObject2 from message
+            perception_msgs::RecognizedObject recognizedObjectMsg2 = msg.get()->recognizedObjects[i+1];
+            sensor_msgs::PointCloud2 sensorMessagePointCloud2 = recognizedObjectMsg2.recognizedObjectPointCloud;
+            pcl::PCLPointCloud2 recognizedObjectPCLPointCloud2;
+            pcl::PointCloud<pcl::PointXYZ>::Ptr recognizedObjectPCLPointCloudXYZ2(new pcl::PointCloud<pcl::PointXYZ>());
+            pcl_conversions::toPCL(sensorMessagePointCloud2, recognizedObjectPCLPointCloud2);
+            pcl::fromPCLPointCloud2(recognizedObjectPCLPointCloud2, *recognizedObjectPCLPointCloudXYZ2);
+            RecognizedObject recognizedObject2 = RecognizedObject(recognizedObjectMsg2.recognizedObjectID, recognizedObjectPCLPointCloudXYZ2);
 
-            std::vector<boost::shared_ptr<Relationship>> objRelationships = rm.getAllRelationships(&segmentedObject1,&segmentedObject2);
+            std::vector<boost::shared_ptr<Relationship>> objRelationships = rm.getAllRelationships(&recognizedObject1,&recognizedObject2);
         }
     }
+
+    // void RelationshipDetectorNode::recognizedObjectListMessageCallback(const perception_msgs::RecognizedObjectList::ConstPtr &msg)
+    // {
+    //     ROS_INFO("Received recognized object list message");
+
+    //     PropertyManager pm;
+    //     RelationshipManager rm;
+    //     int numRecognizedObjects = msg.get()->recognizedObjects.size();
+
+    //     for(int i = 0; i< numRecognizedObjects; i++)
+    //     {
+    //         //get recognizedObject from message
+    //         perception_msgs::RecognizedObject recognizedObjectMsg = msg.get()->recognizedObjects[i];
+    //         sensor_msgs::PointCloud2 sensorMessagePointCloud = recognizedObjectMsg.recognizedObjectPointCloud;
+    //         pcl::PCLPointCloud2 recognizedObjectPCLPointCloud;
+    //         pcl::PointCloud<pcl::PointXYZ>::Ptr recognizedObjectPCLPointCloudXYZ(new pcl::PointCloud<pcl::PointXYZ>());
+    //         pcl_conversions::toPCL(sensorMessagePointCloud, recognizedObjectPCLPointCloud);
+    //         pcl::fromPCLPointCloud2(recognizedObjectPCLPointCloud, *recognizedObjectPCLPointCloudXYZ);
+    //         RecognizedObject recognizedObject = RecognizedObject(recognizedObjectMsg.recognizedObjectID, recognizedObjectPCLPointCloudXYZ);
+    //         std::vector<boost::shared_ptr<PCProperty>> objProperties = pm.getAllProperties(&recognizedObject);
+    //     }
+
+    //     for(int i = 0; i< numRecognizedObjects; i+=2)
+    //     {
+    //         //get recognizedObject1 from message
+    //         perception_msgs::RecognizedObject recognizededObjectMsg1 = msg.get()->recognizedObjects[i];
+    //         sensor_msgs::PointCloud2 sensorMessagePointCloud1 = recognizededObjectMsg1.recognizedObjectPointCloud;
+    //         pcl::PCLPointCloud2 recognizedObjectPCLPointCloud1;
+    //         pcl::PointCloud<pcl::PointXYZ>::Ptr recognizedObjectPCLPointCloudXYZ1(new pcl::PointCloud<pcl::PointXYZ>());
+    //         pcl_conversions::toPCL(sensorMessagePointCloud1, recognizedObjectPCLPointCloud1);
+    //         pcl::fromPCLPointCloud2(recognizedObjectPCLPointCloud1, *recognizedObjectPCLPointCloudXYZ1);
+    //         RecognizedObject recognizedObject1 = RecognizedObject(recognizededObjectMsg1.recognizedObjectID, recognizedObjectPCLPointCloudXYZ1);
+
+    //         //get recognizedObject2 from message
+    //         perception_msgs::RecognizedObject recognizedObjectMsg2 = msg.get()->recognizedObjects[i+1];
+    //         sensor_msgs::PointCloud2 sensorMessagePointCloud2 = recognizedObjectMsg2.recognizedObjectPointCloud;
+    //         pcl::PCLPointCloud2 recognizedObjectPCLPointCloud2;
+    //         pcl::PointCloud<pcl::PointXYZ>::Ptr recognizedObjectPCLPointCloudXYZ2(new pcl::PointCloud<pcl::PointXYZ>());
+    //         pcl_conversions::toPCL(sensorMessagePointCloud2, recognizedObjectPCLPointCloud2);
+    //         pcl::fromPCLPointCloud2(recognizedObjectPCLPointCloud2, *recognizedObjectPCLPointCloudXYZ2);
+    //         RecognizedObject recognizedObject2 = RecognizedObject(recognizedObjectMsg2.recognizedObjectID, recognizedObjectPCLPointCloudXYZ2);
+
+    //         std::vector<boost::shared_ptr<Relationship>> objRelationships = rm.getAllRelationships(&recognizedObject1,&recognizedObject2);
+    //     }
+    // }
 }
 
 
@@ -94,7 +135,6 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "relationship_detector_node");
   ros::NodeHandle nh;
   relationship_detector_node::RelationshipDetectorNode node;
-
   ros::spin();
   return 0;
 }

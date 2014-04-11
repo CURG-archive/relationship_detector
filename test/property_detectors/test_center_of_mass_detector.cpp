@@ -27,11 +27,11 @@ TEST(CenterOfMassDetector, TestAppleCenterOfMass) {
   }
  
   int unique_object_id = 1;
-  SegmentedObject segmentedObject = SegmentedObject(unique_object_id, cloud_ptr);
+  RecognizedObject recognizedObject = RecognizedObject(unique_object_id, cloud_ptr);
 
   CenterOfMassDetector centerOfMassDetector = CenterOfMassDetector();
 
-  centerOfMassDetector.setSegmentedObject(&segmentedObject);
+  centerOfMassDetector.setRecognizedObject(&recognizedObject);
   centerOfMassDetector.computeProperty();
 
   boost::shared_ptr<PCProperty> centerOfMassProperty = centerOfMassDetector.getProperty();
