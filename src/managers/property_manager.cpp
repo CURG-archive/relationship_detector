@@ -2,6 +2,16 @@
 
 bool PropertyManager::instanceFlag = false;
 PropertyManager* PropertyManager::pm = NULL;
+
+PropertyManager::PropertyManager()
+{
+  propertyMap.reserve(7000);
+  //register the properties to their detectors
+  propertyDetectorFactoryMap[PropertyClassIds::CENTER_OF_MASS] = boost::shared_factory<CenterOfMassDetector>();
+  // propertyDetectorFactoryMap[PropertyClassIds::COLOR] = boost::shared_factory<ColorPropertyDetector>();    
+  // propertyDetectorFactoryMap[PropertyClassIds::ORIENTATION] = boost::shared_factory<OrientationPropertyDetector>();
+}
+
 PropertyManager* PropertyManager::getInstance()
 {
     if(!instanceFlag)

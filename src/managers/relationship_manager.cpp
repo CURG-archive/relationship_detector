@@ -2,6 +2,16 @@
 
 bool RelationshipManager::instanceFlag = false;
 RelationshipManager* RelationshipManager::rm = NULL;
+
+RelationshipManager::RelationshipManager()
+{
+  relationshipMap.reserve(7000);    
+  //register the relationships to their detectors
+  relationshipDetectorFactoryMap[RelationshipClassIds::CONTACT_POINTS] = boost::shared_factory<ContactPointsDetector>();
+  relationshipDetectorFactoryMap[RelationshipClassIds::ON_TOP] = boost::shared_factory<OnTopDetector>();
+  relationshipDetectorFactoryMap[RelationshipClassIds::LEFT_RIGHT_ADJACENCY] = boost::shared_factory<LeftRightAdjacencyDetector>();
+}
+
 RelationshipManager* RelationshipManager::getInstance()
 {
     if(!instanceFlag)
