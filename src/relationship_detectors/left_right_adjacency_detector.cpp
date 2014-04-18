@@ -10,25 +10,29 @@ void LeftRightAdjacencyDetector::computeRelationship()
 
     bool isLeftRightAdjacent = false;
     int leftObjectId, rightObjectId;
-
-    RelationshipManager rm;
-    PropertyManager pm;
+    PropertyManager *pm;
+    pm = PropertyManager::getInstance();
+    RelationshipManager *rm;
+    rm = RelationshipManager::getInstance();
+    // PropertyManager pm;
     // check to see proper type casting from pointers to references
-    boost::shared_ptr<Relationship> isTouching = rm.getRelationship(recognizedObject1, recognizedObject2, CONTACT_POINTS);
+    boost::shared_ptr<Relationship> isTouching = rm->getRelationship(recognizedObject1, recognizedObject2, CONTACT_POINTS);
     boost::shared_ptr<ContactPointsRelationship> cp;
     cp = boost::dynamic_pointer_cast<ContactPointsRelationship>(isTouching);
 
-    if(cp->contactPoints.size() > 0)
+    if(!cp->isTouching)        
     {
 
-        boost::shared_ptr<PCProperty> centerOfMassPropertyObject1 = pm.getProperty(recognizedObject1, CENTER_OF_MASS);
+        boost::shared_ptr<PCProperty> centerOfMassPropertyObject1 = pm->getProperty(recognizedObject1, CENTER_OF_MASS);
         boost::shared_ptr<CenterOfMassProperty> com1;
         com1 = boost::dynamic_pointer_cast<CenterOfMassProperty>(centerOfMassPropertyObject1);
 
-        boost::shared_ptr<PCProperty> centerOfMassPropertyObject2 = pm.getProperty(recognizedObject2, CENTER_OF_MASS);
+        boost::shared_ptr<PCProperty> centerOfMassPropertyObject2 = pm->getProperty(recognizedObject2, CENTER_OF_MASS);
         boost::shared_ptr<CenterOfMassProperty> com2;
         com2 = boost::dynamic_pointer_cast<CenterOfMassProperty>(centerOfMassPropertyObject2);
 
+        // if the two point clouds are not touching
+        // and if the center of mass of the first point lcoud is to the left of second point cloud
         if(com1->centerOfMassPoint.x < com2->centerOfMassPoint.x)
         {
             isLeftRightAdjacent = true;
@@ -46,9 +50,11 @@ void LeftRightAdjacencyDetector::computeRelationship()
             std::cout << "Object 2 is right adjacent to Object 1"<<std::endl;
         }      
     }
+    // if the two objects are touching then we are unable to segment them
+    // so no relationships detected
     else{
         detectedRelationship = false;
-        std::cout << "Objects are not in contact. Adjacency relationship is not defined"<<std::endl;
+        std::cout << "Objects in contact. Segmentation not possible. Adjacency relationship not defined."<<std::endl;
     }
         Relationship *leftRightAdjacency = new LeftRightAdjacencyRelationship(isLeftRightAdjacent, leftObjectId, rightObjectId);
         computedRelationship = boost::shared_ptr<Relationship>(leftRightAdjacency);

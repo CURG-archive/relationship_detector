@@ -6,24 +6,6 @@
 #include "build_recognized_objects.h"
 //script to run tests : catkin_make run_tests
 
-// int nextRecognizedObjectId = 0;
-
-// RecognizedObject buildRecognizedObject(std::string filename)
-// {
-
-//   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_ptr (new pcl::PointCloud<pcl::PointXYZ>);
-//   if (pcl::io::loadPCDFile<pcl::PointXYZ> (filename, *cloud_ptr) == -1) //* load the file
-//   {
-//     PCL_ERROR ("Couldn't read file \n");
-//   }
-
-//   nextRecognizedObjectId +=1;
-//   RecognizedObject recognizedObject = RecognizedObject(nextRecognizedObjectId, cloud_ptr);
-
-//   return recognizedObject;
-
-// }
-
 TEST(ContactPointsDetector, TestTwoObjectsTouching) {
 
   std::string fileName1 = ros::package::getPath("object_models") + "/models/rgbd-dataset/test_data/apple_1_1_1.pcd";

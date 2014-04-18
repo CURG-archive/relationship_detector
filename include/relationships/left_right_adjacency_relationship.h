@@ -2,6 +2,7 @@
 #define LEFT_RIGHT_ADJACENCY_RELATIONSHIP_H
 
 #include "relationship.h"
+#include "relationshipEnum.h"
 #include <geometry_msgs/Point.h>
 #include <vector>
 
@@ -14,7 +15,7 @@ class LeftRightAdjacencyRelationship: public Relationship
 
 		LeftRightAdjacencyRelationship(bool is_left_right_adjacent, int left_object_id, int right_object_id)
 		{
-			uniqueRelationshipType = 3;
+			uniqueRelationshipType = LEFT_RIGHT_ADJACENCY;
 			uniqueRelationshipId = getNextRelationshipId();
 			isLeftRightAdjacent = is_left_right_adjacent;
 			leftObjectId = left_object_id;

@@ -11,21 +11,23 @@ void OnTopDetector::computeRelationship()
     bool isOnTop = false;
     int onTopObjectId;
 
-    RelationshipManager rm;
-    PropertyManager pm;
+    PropertyManager *pm;
+    pm = PropertyManager::getInstance();
+    RelationshipManager *rm;
+    rm = RelationshipManager::getInstance();
     // check to see proper type casting from pointers to references
-    boost::shared_ptr<Relationship> isTouching = rm.getRelationship(recognizedObject1, recognizedObject2, CONTACT_POINTS);
+    boost::shared_ptr<Relationship> isTouching = rm->getRelationship(recognizedObject1, recognizedObject2, CONTACT_POINTS);
     boost::shared_ptr<ContactPointsRelationship> cp;
     cp = boost::dynamic_pointer_cast<ContactPointsRelationship>(isTouching);
 
     if(cp->contactPoints.size() > 0)
     {
 
-        boost::shared_ptr<PCProperty> centerOfMassPropertyObject1 = pm.getProperty(recognizedObject1, CENTER_OF_MASS);
+        boost::shared_ptr<PCProperty> centerOfMassPropertyObject1 = pm->getProperty(recognizedObject1, CENTER_OF_MASS);
         boost::shared_ptr<CenterOfMassProperty> com1;
         com1 = boost::dynamic_pointer_cast<CenterOfMassProperty>(centerOfMassPropertyObject1);
 
-        boost::shared_ptr<PCProperty> centerOfMassPropertyObject2 = pm.getProperty(recognizedObject2, CENTER_OF_MASS);
+        boost::shared_ptr<PCProperty> centerOfMassPropertyObject2 = pm->getProperty(recognizedObject2, CENTER_OF_MASS);
         boost::shared_ptr<CenterOfMassProperty> com2;
         com2 = boost::dynamic_pointer_cast<CenterOfMassProperty>(centerOfMassPropertyObject2);
 
@@ -46,7 +48,7 @@ void OnTopDetector::computeRelationship()
     }
     else{
         detectedRelationship = false;
-        std::cout << "Objects are not in contact. On top relationship is not defined"<<std::endl;
+        std::cout << "Objects are not in contact. On top relationship is not defined!"<<std::endl;
     }
         Relationship *onTop = new OnTopRelationship(isOnTop, onTopObjectId);
         computedRelationship = boost::shared_ptr<Relationship>(onTop);

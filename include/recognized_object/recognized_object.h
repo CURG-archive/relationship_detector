@@ -6,9 +6,7 @@
 
 class RecognizedObject
 {
-
 	public:
-
 		int uniqueId;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloudPtr;
 
@@ -17,7 +15,6 @@ class RecognizedObject
 			uniqueId = recognized_object_id;
 			pointCloudPtr = recognized_object_point_cloud_ptr;
 		}
-
 };
 
 #endif

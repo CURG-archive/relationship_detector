@@ -25,13 +25,13 @@ void ContactPointsDetector::computeRelationship()
 
         if(kdtree.radiusSearch(searchPoint, radius, pointIdxRadiusSearch, pointRadiusSquaredDistance,max_nn) > 0)
         {
-            for (size_t i = 0; i < pointIdxRadiusSearch.size (); ++i)
-            {
-                std::cout << "    "  << recognizedObject1->pointCloudPtr->points[ pointIdxRadiusSearch[i] ].x
-                          << " " << recognizedObject1->pointCloudPtr->points[ pointIdxRadiusSearch[i] ].y
-                          << " " << recognizedObject1->pointCloudPtr->points[ pointIdxRadiusSearch[i] ].z
-                          << " (squared distance: " << pointRadiusSquaredDistance[i] << ")" << std::endl;
-            }
+            // for (size_t i = 0; i < pointIdxRadiusSearch.size (); ++i)
+            // {
+            //     std::cout << "    "  << recognizedObject1->pointCloudPtr->points[ pointIdxRadiusSearch[i] ].x
+            //               << " " << recognizedObject1->pointCloudPtr->points[ pointIdxRadiusSearch[i] ].y
+            //               << " " << recognizedObject1->pointCloudPtr->points[ pointIdxRadiusSearch[i] ].z
+            //               << " (squared distance: " << pointRadiusSquaredDistance[i] << ")" << std::endl;
+            // }
             contactPoints.push_back(searchPoint);
             detectedRelationship = true;
         }
@@ -41,6 +41,6 @@ void ContactPointsDetector::computeRelationship()
         std::cout << "Relationship Detected\n";
     }
 
-    Relationship *cp = new ContactPointsRelationship(contactPoints);
+    Relationship *cp = new ContactPointsRelationship(contactPoints,detectedRelationship);
     computedRelationship = boost::shared_ptr<Relationship>(cp);
 }

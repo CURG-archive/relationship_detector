@@ -20,61 +20,43 @@
 using namespace std;
 namespace boost {
         // Add in a simple wrapper for a factor creating shared pointers
-                template<typename T>
+        template<typename T>
         struct shared_factory : public factory<shared_ptr<T> >
         { };
 }
 
 class PropertyManager
 {
-protected:
-  typedef boost::function<PropertyDetectorPtr () > PropertyDetectorFactory;
-  typedef map<int, PropertyDetectorFactory> PropertyDetectorFactoryMap;
-  typedef int PropertyType;
-
-  static const int NUM_PROPERTIES = 1;
-  //map of already detected properties
-  //key: hash(object_id and property_type)
-  //value: property
-  unordered_map<int, boost::shared_ptr<PCProperty>> propertyMap;
-  PropertyDetectorFactoryMap propertyDetectorFactoryMap;
-
-public:
-  //constructor 
-  PropertyManager()
-  {
-    propertyMap.reserve(7000);
-    //register the properties to their detectors
-    propertyDetectorFactoryMap[PropertyClassIds::CENTER_OF_MASS] = boost::shared_factory<CenterOfMassDetector>();
-    // propertyDetectorFactoryMap[PropertyClassIds::COLOR] = boost::shared_factory<ColorPropertyDetector>();    
-    // propertyDetectorFactoryMap[PropertyClassIds::ORIENTATION] = boost::shared_factory<OrientationPropertyDetector>();
-  }
-
-  boost::shared_ptr<PCProperty> getProperty(RecognizedObject *recognizedObject, PropertyType property_type)
-  {
-    int property_hash = pow(2,recognizedObject->uniqueId)*pow(3,property_type);
-    if(propertyMap.find(property_hash) != propertyMap.end())
+  private:
+    static PropertyManager *pm;
+    static bool instanceFlag;
+    PropertyManager()
     {
-      return propertyMap[property_hash];
+      propertyMap.reserve(7000);
+      //register the properties to their detectors
+      propertyDetectorFactoryMap[PropertyClassIds::CENTER_OF_MASS] = boost::shared_factory<CenterOfMassDetector>();
+      // propertyDetectorFactoryMap[PropertyClassIds::COLOR] = boost::shared_factory<ColorPropertyDetector>();    
+      // propertyDetectorFactoryMap[PropertyClassIds::ORIENTATION] = boost::shared_factory<OrientationPropertyDetector>();
     }
 
-    boost::shared_ptr<PropertyDetector> detector = propertyDetectorFactoryMap[property_type]();
-    detector->setRecognizedObject(recognizedObject);
-    detector->computeProperty();
-    propertyMap[property_hash] = detector->getProperty();
-    return detector->getProperty();
-  }
+  protected:
+    typedef boost::function<PropertyDetectorPtr () > PropertyDetectorFactory;
+    typedef map<int, PropertyDetectorFactory> PropertyDetectorFactoryMap;
+    typedef int PropertyType;
 
-  std::vector<boost::shared_ptr<PCProperty>> getAllProperties(RecognizedObject *recognizedObject)
-  {
-    std::vector<boost::shared_ptr<PCProperty>> allProperties;
-    
-    for (int i=0; i<NUM_PROPERTIES; i++)
-    {
-      allProperties.push_back(this->getProperty(recognizedObject, i));
-    }
-    return allProperties;
-  }
+    static const int NUM_PROPERTIES = 1;
+    //map of already detected properties
+    //key: hash(object_id and property_type)
+    //value: property
+    unordered_map<int, boost::shared_ptr<PCProperty>> propertyMap;
+    PropertyDetectorFactoryMap propertyDetectorFactoryMap;
+
+  public:
+    //constructor 
+    static PropertyManager* getInstance();
+
+    boost::shared_ptr<PCProperty> getProperty(RecognizedObject *recognizedObject, PropertyType property_type);
+    std::vector<boost::shared_ptr<PCProperty>> getAllProperties(RecognizedObject *recognizedObject);
 
 };
 

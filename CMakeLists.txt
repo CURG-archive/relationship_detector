@@ -122,6 +122,8 @@ SET(RELATIONSHIP_DETECTOR_LIBRARY_SOURCE
     src/relationships/relationship.cpp
     src/properties/properties.cpp
     src/build_recognized_objects.cpp
+    src/managers/property_manager.cpp
+    src/managers/relationship_manager.cpp
     )
 
 ## Specify additional locations of header files
