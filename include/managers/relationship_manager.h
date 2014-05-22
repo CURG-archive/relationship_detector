@@ -24,17 +24,17 @@ using namespace std;
 class RelationshipManager
 {
   private:
-  static RelationshipManager *rm;
-  static bool instanceFlag;
+  static RelationshipManager *relationshipManager;
     //constructor 
     RelationshipManager();
+    ~RelationshipManager();
 
   protected:
     typedef boost::function<RelationshipDetectorPtr ()> RelationshipDetectorFactory;
     typedef map<int, RelationshipDetectorFactory> RelationshipDetectorFactoryMap;
     typedef int RelationshipType;
 
-    static const int NUM_RELATIONSHIPS = 1;
+    static const int NUM_RELATIONSHIPS = 3;
     //map of already detected relationships
     //key: hash(object_id and relationship_type)
     //value: relationship (true or false)

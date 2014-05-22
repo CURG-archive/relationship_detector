@@ -38,7 +38,7 @@ void ContactPointsDetector::computeRelationship()
     }
     if(detectedRelationship)
     {
-        std::cout << "Relationship Detected\n";
+        std::cout << "Contacts points relationship detected\n";
     }
 
     Relationship *cp = new ContactPointsRelationship(contactPoints,detectedRelationship);

@@ -1,7 +1,6 @@
 #include <property_manager.h>
 
-bool PropertyManager::instanceFlag = false;
-PropertyManager* PropertyManager::pm = NULL;
+PropertyManager* PropertyManager::propertyManager = NULL;
 
 PropertyManager::PropertyManager()
 {
@@ -14,16 +13,9 @@ PropertyManager::PropertyManager()
 
 PropertyManager* PropertyManager::getInstance()
 {
-    if(!instanceFlag)
-    {
-        pm = new PropertyManager();
-        instanceFlag = true;
-        return pm;
-    }
-    else
-    {
-        return pm;
-    }
+    if(!propertyManager)
+        propertyManager = new PropertyManager();
+    return propertyManager;
 }
 
 boost::shared_ptr<PCProperty> PropertyManager::getProperty(RecognizedObject *recognizedObject, PropertyType property_type)
@@ -45,7 +37,7 @@ std::vector<boost::shared_ptr<PCProperty>> PropertyManager::getAllProperties(Rec
 {
   std::vector<boost::shared_ptr<PCProperty>> allProperties;
   
-  for (int i=0; i<NUM_PROPERTIES; i++)
+  for (int i=1; i<=NUM_PROPERTIES; i++)
   {
     allProperties.push_back(this->getProperty(recognizedObject, i));
   }

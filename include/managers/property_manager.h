@@ -28,9 +28,9 @@ namespace boost {
 class PropertyManager
 {
   private:
-    static PropertyManager *pm;
-    static bool instanceFlag;
+    static PropertyManager *propertyManager;
     PropertyManager();
+    ~PropertyManager();
 
   protected:
     typedef boost::function<PropertyDetectorPtr () > PropertyDetectorFactory;

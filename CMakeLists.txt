@@ -7,7 +7,7 @@ project(relationship_detector)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED message_generation std_msgs sensor_msgs geometry_msgs roscpp roslib perception_msgs)
+find_package(catkin REQUIRED message_generation std_msgs tf pcl_ros sensor_msgs geometry_msgs roscpp roslib perception_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)

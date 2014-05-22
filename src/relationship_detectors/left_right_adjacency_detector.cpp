@@ -7,7 +7,6 @@ void LeftRightAdjacencyDetector::computeRelationship()
 {
     int obj1_id = recognizedObject1->uniqueId;
     int obj2_id = recognizedObject2->uniqueId;
-
     bool isLeftRightAdjacent = false;
     int leftObjectId, rightObjectId;
     PropertyManager *pm;
@@ -39,7 +38,7 @@ void LeftRightAdjacencyDetector::computeRelationship()
             leftObjectId = obj1_id;
             rightObjectId = obj2_id;
             detectedRelationship = true;
-            std::cout << "Object 1 is left adjacent to Object 2"<<std::endl;
+            std::cout << "Object "<<obj1_id<<" is right adjacent to Object "<<obj2_id<<std::endl;
         }
         else
         {
@@ -47,7 +46,7 @@ void LeftRightAdjacencyDetector::computeRelationship()
             leftObjectId = obj2_id;
             rightObjectId = obj1_id;
             detectedRelationship = true;
-            std::cout << "Object 2 is right adjacent to Object 1"<<std::endl;
+            std::cout << "Object "<<obj2_id<<" is right adjacent to Object "<<obj1_id<<std::endl;
         }      
     }
     // if the two objects are touching then we are unable to segment them

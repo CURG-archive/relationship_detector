@@ -36,14 +36,14 @@ void OnTopDetector::computeRelationship()
             isOnTop = true;
             detectedRelationship = true;
             onTopObjectId = obj1_id;
-            std::cout << "Object 1 is on top of Object 2"<<std::endl;
+            std::cout << "Object "<< obj1_id <<" is on top of Object "<<obj2_id<<std::endl;
         }
         else
         {
             isOnTop = true;
             detectedRelationship = true;
             onTopObjectId = obj2_id;
-            std::cout << "Object 2 is on top of Object 1"<<std::endl;
+            std::cout << "Object "<<obj2_id<<" is on top of Object "<<obj1_id<<std::endl;
         }      
     }
     else{

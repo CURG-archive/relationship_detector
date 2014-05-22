@@ -1,7 +1,6 @@
 #include <relationship_manager.h>
 
-bool RelationshipManager::instanceFlag = false;
-RelationshipManager* RelationshipManager::rm = NULL;
+RelationshipManager* RelationshipManager::relationshipManager = NULL;
 
 RelationshipManager::RelationshipManager()
 {
@@ -14,16 +13,9 @@ RelationshipManager::RelationshipManager()
 
 RelationshipManager* RelationshipManager::getInstance()
 {
-    if(!instanceFlag)
-    {
-        rm = new RelationshipManager();
-        instanceFlag = true;
-        return rm;
-    }
-    else
-    {
-        return rm;
-    }
+    if(!relationshipManager)
+        relationshipManager = new RelationshipManager();
+    return relationshipManager;
 }
 
 boost::shared_ptr<Relationship> RelationshipManager::getRelationship(RecognizedObject *recognizedObject1, RecognizedObject *recognizedObject2, RelationshipType relationship_type)
@@ -45,7 +37,7 @@ std::vector<boost::shared_ptr<Relationship>> RelationshipManager::getAllRelation
 {
   std::vector<boost::shared_ptr<Relationship>> allRelationships;
   
-  for (int i=0; i<NUM_RELATIONSHIPS; i++)
+  for (int i=1; i<=NUM_RELATIONSHIPS; i++)
   {
     allRelationships.push_back(this->getRelationship(recognizedObject1,recognizedObject2,i));
   }
